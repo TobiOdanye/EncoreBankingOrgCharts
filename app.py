@@ -1,6 +1,7 @@
 import pandas as pd
 import requests
 import re
+import io
 
 # Set options to display all rows and columns
 pd.set_option('display.max_rows', None)
