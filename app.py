@@ -254,10 +254,6 @@ def extract_seniority(text):
 
     return None  # or 'Unknown'
 
-candidates = candidates[candidates['Candidate Experience'] == 1]
-candidates['Candidate Seniority'] = candidates['Candidate Title'].apply(extract_seniority)
-candidates = candidates[["Candidate ID", "Candidate Name", "Candidate Title", "Candidate Company", "Candidate Location", "Candidate Seniority"]]
-
 # Streamlit UI
 st.title("📊 Ezekia Candidate Export Tool")
 api_id = st.text_input("Enter Ezekia Project API ID", value="647987")
