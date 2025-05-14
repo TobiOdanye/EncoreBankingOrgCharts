@@ -335,12 +335,12 @@ if st.button("Fetch Candidates") and api_id:
             mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
         )
 
+        # Define the export path
+        export_path = r"C:/Users/TobiOdanyeEncoreSear/Encore Search/Encore Search - Data and Insights/01. Internal/Org Charts/EMEA_Banking_Org_Data.xlsx"
+
+        # Export to Excel
+        candidates_output.to_excel(export_path, index=False)
+
     except Exception as e:
         st.error(f"Error occurred: {e}")
 
-
-# Define the export path
-export_path = r"C:/Users/TobiOdanyeEncoreSear/Encore Search/Encore Search - Data and Insights/01. Internal/Org Charts/EMEA_Banking_Org_Data.xlsx"
-
-# Export to Excel
-candidates_output.to_excel(export_path, index=False)
