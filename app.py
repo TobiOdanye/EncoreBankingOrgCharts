@@ -257,17 +257,16 @@ def extract_seniority(text):
 # Streamlit UI
 st.title("📊 Ezekia Candidate Export Tool")
 
-# Text input FIRST
-api_id = st.text_input("Enter Ezekia Project API ID", value="647987")
+# Input
+api_id = st.text_input("Enter Ezekia Project API ID")
 
-# Only run the logic AFTER user clicks the button
 if st.button("Fetch Candidates") and api_id:
     try:
         api_tokens = fetch_api_tokens()  # Get tokens here
         candidates = fetch_hotlist_candidates(api_id, api_tokens)
         candidates = candidates[candidates['Candidate Experience'] == 1]
         candidates['Candidate Seniority'] = candidates['Candidate Title'].apply(extract_seniority)
-        candidates = candidates[[
+        candidates = candidates[[ 
             "Candidate ID", "Candidate Name", "Candidate Title",
             "Candidate Company", "Candidate Location", "Candidate Seniority"
         ]]
