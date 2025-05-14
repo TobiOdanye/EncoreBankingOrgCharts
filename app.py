@@ -253,7 +253,7 @@ def extract_seniority(text):
     return None  # or 'Unknown'
 
 # Streamlit UI
-st.title("📊 Ezekia Candidate Export Tool")
+st.title("Ezekia Candidate Export Tool")
 
 # Input
 api_id = st.text_input("Enter Ezekia Project API ID")
@@ -269,7 +269,7 @@ if st.button("Fetch Candidates") and api_id:
             "Candidate Company", "Candidate Location", "Candidate Seniority"
         ]]
 
-        st.success("✅ Data fetched successfully!")
+        st.success("Data fetched successfully!")
         st.dataframe(candidates)
 
         # Excel export
@@ -285,4 +285,4 @@ if st.button("Fetch Candidates") and api_id:
         )
 
     except Exception as e:
-        st.error(f"❌ Error occurred: {e}")
+        st.error(f"Error occurred: {e}")
