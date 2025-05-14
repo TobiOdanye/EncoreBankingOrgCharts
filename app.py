@@ -214,8 +214,6 @@ def fetch_hotlist_candidates(api_id, api_tokens):
 
     return candidate_df
 
-candidates = fetch_hotlist_candidates(api_id, api_tokens)
-
 # Normalize and map fallback + bracket values to final form
 fallback_map = {
     'executive director': 'ED',
