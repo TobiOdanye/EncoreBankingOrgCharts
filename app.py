@@ -75,8 +75,6 @@ def fetch_api_tokens():
         "fRM5_84z9y4BaLzbRDyFQ"]
     return api_tokens
 
-api_tokens = fetch_api_tokens()
-
 def fetch_hotlist_candidates(api_id, api_tokens):
     candidate_list = []
 
