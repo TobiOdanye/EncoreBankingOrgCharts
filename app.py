@@ -262,7 +262,7 @@ candidates = candidates[["Candidate ID", "Candidate Name", "Candidate Title", "C
 
 excel_buffer = io.BytesIO()
 with pd.ExcelWriter(excel_buffer, engine='openpyxl') as writer:
-    final_df.to_excel(writer, index=False, sheet_name='Candidates')
+    candidates.to_excel(writer, index=False, sheet_name='Candidates')
 
 st.download_button(
     label="📥 Download Excel",
