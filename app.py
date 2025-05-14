@@ -259,15 +259,13 @@ candidates = candidates[candidates['Candidate Experience'] == 1]
 candidates['Candidate Seniority'] = candidates['Candidate Title'].apply(extract_seniority)
 candidates = candidates[["Candidate ID", "Candidate Name", "Candidate Title", "Candidate Company", "Candidate Location", "Candidate Seniority"]]
 
-candidates.to_excel("C:/Users/TobiOdanyeEncoreSear/OneDrive - Encore Search/Documents/metals_zapier_base_all.xlsx", index=False)
+excel_buffer = io.BytesIO()
+with pd.ExcelWriter(excel_buffer, engine='openpyxl') as writer:
+    final_df.to_excel(writer, index=False, sheet_name='Candidates')
 
-# Define output path
-#output_path = "C:/Users/TobiOdanyeEncoreSear/OneDrive - Encore Search/Documents/metals_zapier_base.xlsx"
-
-# Create an Excel writer object
-#with pd.ExcelWriter(output_path, engine='xlsxwriter') as writer:
-#    # Group by 'candidate_company' and write each group to a separate sheet
-#    for company, group_df in candidates.groupby('Candidate Company'):
-#        # Clean the sheet name (max 31 chars, no special chars)
-#        sheet_name = str(company)[:31].replace('/', '-').replace('\\', '-')
-#        group_df.to_excel(writer, sheet_name=sheet_name, index=False)
+st.download_button(
+    label="📥 Download Excel",
+    data=excel_buffer.getvalue(),
+    file_name="ezekia_candidates.xlsx",
+    mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+)
