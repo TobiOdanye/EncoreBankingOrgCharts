@@ -287,11 +287,10 @@ def fetch_candidates_additional_labels(hotlist_df_trans, api_tokens):
             for item in response.json()["data"]:
                 if item["field"]["label"] == "Reports Into" and item["value"]:
                     candidate_reports_into = item["value"]
-                    candidate_reports_into = re.search(r'>(\d+)<', candidate_reports_into)
-                    break  # Break after finding the first non-null "Reports Into"
-                elif item["field"]["label"] == "Reports Into" and candidate_reports_into is None:
-                    candidate_reports_into = item["value"]
-                    break  # Stop after finding "GPT Gender" if "Gender" was not set
+                    match = re.search(r'>(\d+)<', candidate_reports_into)
+                    if match:
+                        candidate_reports_into = match.group(1)
+                    break
 
         # Append extracted values to the list
         candidates_additional_list.append({"Candidate ID": id, "Candidate Reports Into": candidate_reports_into})
