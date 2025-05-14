@@ -256,10 +256,14 @@ def extract_seniority(text):
 
 # Streamlit UI
 st.title("📊 Ezekia Candidate Export Tool")
+
+# Text input FIRST
 api_id = st.text_input("Enter Ezekia Project API ID", value="647987")
 
+# Only run the logic AFTER user clicks the button
 if st.button("Fetch Candidates") and api_id:
     try:
+        api_tokens = fetch_api_tokens()  # Get tokens here
         candidates = fetch_hotlist_candidates(api_id, api_tokens)
         candidates = candidates[candidates['Candidate Experience'] == 1]
         candidates['Candidate Seniority'] = candidates['Candidate Title'].apply(extract_seniority)
@@ -281,3 +285,7 @@ if st.button("Fetch Candidates") and api_id:
             data=excel_buffer.getvalue(),
             file_name="ezekia_candidates.xlsx",
             mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        )
+
+    except Exception as e:
+        st.error(f"❌ Error occurred: {e}")
