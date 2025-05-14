@@ -235,6 +235,7 @@ ordered_fallbacks = list(fallback_map.keys())
 # Approved values for brackets (case-insensitive)
 allowed_bracket_values = set(fallback_map.keys())
 
+
 def extract_seniority(text):
     text_lower = text.lower()
 
@@ -252,6 +253,53 @@ def extract_seniority(text):
 
     return None  # or 'Unknown'
 
+
+def fetch_candidates_additional_labels(hotlist_df_trans, api_tokens):
+    candidate_id_list = list(hotlist_df_trans['Candidate ID'].unique())
+    print(f"Total candidates: {len(candidate_id_list)}")
+
+    candidates_additional_list = []
+    index_counter = 0
+    for index, id in enumerate(candidate_id_list):
+
+        print(f"Project: {index} / {len(candidate_id_list)}")
+
+        # Ezekia URL for total meeting and page (api) count
+        base_url_agg = f"https://ezekia.com/api/people/{id}/additional-info"
+
+        index_counter += 1
+        api_token = api_tokens[index_counter % len(api_tokens)]
+
+        # Headers to authenticate API request for total counts
+        headers = {
+            "Authorization": f"Bearer {api_token}",
+            "Content-Type": "application/json"  # Adjust content type if necessary
+        }
+
+        # API request (GET request) for total counts
+        response = requests.get(base_url_agg, headers=headers)
+
+        # Initialize project_rec_label before the loop
+        candidate_reports_into = None
+
+        # Iterate through the response data
+        if len(response.json()["data"]) > 0:
+            for item in response.json()["data"]:
+                if item["field"]["label"] == "Reports Into" and item["value"]:
+                    candidate_reports_into = item["value"]
+                    break  # Break after finding the first non-null "Gender"
+                elif item["field"]["label"] == "Reports Into" and candidate_reports_into is None:
+                    candidate_reports_into = item["value"]
+                    break  # Stop after finding "GPT Gender" if "Gender" was not set
+
+        # Append extracted values to the list
+        candidates_additional_list.append({"Candidate ID": id, "Candidate Reports Into": candidate_reports_into})
+
+    # Create a DataFrame from the list of dictionaries
+    df = pd.DataFrame(candidates_additional_list).reset_index(drop=True)
+
+    return df
+
 # Streamlit UI
 st.title("Ezekia Candidate Export Tool")
 
@@ -268,14 +316,17 @@ if st.button("Fetch Candidates") and api_id:
             "Candidate ID", "Candidate Name", "Candidate Title",
             "Candidate Company", "Candidate Location", "Candidate Seniority"
         ]]
-
+        
+        candidate_reports_into = fetch_candidates_additional_labels(candidates, api_tokens)
+        candidates_output = pd.merge(candidates, candidate_reports_into, on='Candidate ID', how='inner')
+        
         st.success("Data fetched successfully!")
-        st.dataframe(candidates)
+        st.dataframe(candidates_output)
 
         # Excel export
         excel_buffer = io.BytesIO()
         with pd.ExcelWriter(excel_buffer, engine='openpyxl') as writer:
-            candidates.to_excel(writer, index=False, sheet_name='Candidates')
+            candidates_output.to_excel(writer, index=False, sheet_name='Candidates')
 
         st.download_button(
             label="Download Excel",
