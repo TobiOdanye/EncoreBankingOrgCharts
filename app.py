@@ -301,7 +301,7 @@ def fetch_candidates_additional_labels(hotlist_df_trans, api_tokens):
     return df
 
 # Streamlit UI
-st.title("Ezekia Candidate Export Tool")
+st.title("Ezekia Org Chart Inputs")
 
 # Input
 api_id = st.text_input("Enter Ezekia Project API ID")
