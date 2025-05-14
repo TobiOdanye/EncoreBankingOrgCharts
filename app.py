@@ -278,7 +278,7 @@ if st.button("Fetch Candidates") and api_id:
             candidates.to_excel(writer, index=False, sheet_name='Candidates')
 
         st.download_button(
-            label="📥 Download Excel",
+            label="Download Excel",
             data=excel_buffer.getvalue(),
             file_name="ezekia_candidates.xlsx",
             mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
