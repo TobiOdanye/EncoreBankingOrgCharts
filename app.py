@@ -76,7 +76,6 @@ def fetch_api_tokens():
     return api_tokens
 
 api_tokens = fetch_api_tokens()
-api_id = '647987'
 
 def fetch_hotlist_candidates(api_id, api_tokens):
     candidate_list = []
@@ -261,13 +260,27 @@ candidates = candidates[candidates['Candidate Experience'] == 1]
 candidates['Candidate Seniority'] = candidates['Candidate Title'].apply(extract_seniority)
 candidates = candidates[["Candidate ID", "Candidate Name", "Candidate Title", "Candidate Company", "Candidate Location", "Candidate Seniority"]]
 
-excel_buffer = io.BytesIO()
-with pd.ExcelWriter(excel_buffer, engine='openpyxl') as writer:
-    candidates.to_excel(writer, index=False, sheet_name='Candidates')
+# Streamlit UI
+st.title("📊 Ezekia Candidate Export Tool")
+api_id = st.text_input("Enter Ezekia Project API ID", value="647987")
 
-st.download_button(
-    label="📥 Download Excel",
-    data=excel_buffer.getvalue(),
-    file_name="ezekia_candidates.xlsx",
-    mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-)
+if st.button("Fetch Candidates"):
+    candidates = fetch_hotlist_candidates(api_id, api_tokens)
+    candidates = candidates[candidates['Candidate Experience'] == 1]
+    candidates['Candidate Seniority'] = candidates['Candidate Title'].apply(extract_seniority)
+    candidates = candidates[["Candidate ID", "Candidate Name", "Candidate Title", "Candidate Company", "Candidate Location", "Candidate Seniority"]]
+
+    st.success("✅ Data fetched successfully!")
+    st.dataframe(candidates)
+
+    # Excel export
+    excel_buffer = io.BytesIO()
+    with pd.ExcelWriter(excel_buffer, engine='openpyxl') as writer:
+        candidates.to_excel(writer, index=False, sheet_name='Candidates')
+
+    st.download_button(
+        label="📥 Download Excel",
+        data=excel_buffer.getvalue(),
+        file_name="ezekia_candidates.xlsx",
+        mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    )
