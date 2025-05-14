@@ -2,6 +2,7 @@ import pandas as pd
 import requests
 import re
 import io
+import streamlit as st
 
 # Set options to display all rows and columns
 pd.set_option('display.max_rows', None)
