@@ -285,7 +285,7 @@ def fetch_candidates_additional_labels(hotlist_df_trans, api_tokens):
         # Iterate through the response data
         if len(response.json()["data"]) > 0:
             for item in response.json()["data"]:
-                if item["people"]["relationship"] == 27571:
+                if item["people"]["relationship"] == '27571':
                     candidate_reports_into = item["people"]["id"]
 
         # Append extracted values to the list
