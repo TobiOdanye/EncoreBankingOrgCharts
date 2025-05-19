@@ -265,7 +265,7 @@ def fetch_candidates_additional_labels(hotlist_df_trans, api_tokens):
         print(f"Project: {index} / {len(candidate_id_list)}")
 
         # Ezekia URL for total meeting and page (api) count
-        base_url_agg = f"https://ezekia.com/api/people/{id}/additional-info"
+        base_url_agg = f"https://ezekia.com/api/relationships?id={id}&type=person&relatedType=person"
 
         index_counter += 1
         api_token = api_tokens[index_counter % len(api_tokens)]
@@ -285,12 +285,8 @@ def fetch_candidates_additional_labels(hotlist_df_trans, api_tokens):
         # Iterate through the response data
         if len(response.json()["data"]) > 0:
             for item in response.json()["data"]:
-                if item["field"]["label"] == "Reports Into" and item["value"]:
-                    candidate_reports_into = item["value"]
-                    match = re.search(r'>(\d+)<', candidate_reports_into)
-                    if match:
-                        candidate_reports_into = match.group(1)
-                    break
+                if item["people"]["relationship"] == 27571:
+                    candidate_reports_into = item["people"]["id"]
 
         # Append extracted values to the list
         candidates_additional_list.append({"Candidate ID": id, "Candidate Reports Into": candidate_reports_into})
