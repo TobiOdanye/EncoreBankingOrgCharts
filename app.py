@@ -313,6 +313,7 @@ if st.button("Fetch Candidates") and api_id:
             "Candidate ID", "Candidate Name", "Candidate Title",
             "Candidate Company", "Candidate Location", "Candidate Seniority"
         ]]
+        candidates["Lucid Space"] = ""
         
         candidate_reports_into = fetch_candidates_additional_labels(candidates, api_tokens)
         candidates_output = pd.merge(candidates, candidate_reports_into, on='Candidate ID', how='inner')
