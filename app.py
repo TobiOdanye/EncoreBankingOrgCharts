@@ -264,6 +264,8 @@ def fetch_candidates_additional_labels(hotlist_df_trans, api_tokens):
 
         print(f"Project: {index} / {len(candidate_id_list)}")
 
+        candidate_url = f"https://ezekia.com/#/people/{id}"
+
         # Ezekia URL for total meeting and page (api) count
         base_url_agg = f"https://ezekia.com/api/relationships?id={id}&type=person&relatedType=person"
 
@@ -290,7 +292,7 @@ def fetch_candidates_additional_labels(hotlist_df_trans, api_tokens):
                     candidate_reports_into = person["id"]
 
         # Append extracted values to the list
-        candidates_additional_list.append({"Candidate ID": id, "Candidate Reports Into": candidate_reports_into})
+        candidates_additional_list.append({"Candidate ID": id, "Candidate URL": candidate_url, "Candidate Reports Into": candidate_reports_into})
 
     # Create a DataFrame from the list of dictionaries
     df = pd.DataFrame(candidates_additional_list).reset_index(drop=True)
