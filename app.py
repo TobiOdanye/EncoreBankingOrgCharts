@@ -307,6 +307,7 @@ if st.button("Fetch Candidates") and api_id:
     try:
         api_tokens = fetch_api_tokens()  # Get tokens here
         candidates = fetch_hotlist_candidates(api_id, api_tokens)
+        st.success("Fetch hotlist candidates function 1!")
         candidates = candidates[candidates['Candidate Experience'] == 1]
         candidates['Candidate Seniority'] = candidates['Candidate Title'].apply(extract_seniority)
         candidates = candidates[[ 
