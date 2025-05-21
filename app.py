@@ -337,7 +337,7 @@ if st.button("Fetch Candidates") and api_id:
         candidates['Candidate Seniority'] = candidates['Candidate Title'].apply(extract_seniority)
         candidates = candidates[[ 
             "Candidate ID", "Candidate Name", "Candidate Title",
-            "Candidate Company", "Candidate Location", "Candidate Seniority"
+            "Candidate Company", "Candidate Location", "Candidate Seniority", "Candidate Company Previous"
         ]]
         candidates["Lucid Space"] = ""
         
