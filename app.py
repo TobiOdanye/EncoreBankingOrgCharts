@@ -299,6 +299,25 @@ def fetch_candidates_additional_labels(hotlist_df_trans, api_tokens):
 
     return df
 
+def get_candidate_companies(group):
+    # Sort by experience
+    group = group.sort_values(by='Candidate Experience')
+    
+    # Get company for experience 1
+    company1 = group.loc[group['Candidate Experience'] == 1, 'Candidate Company'].values[0]
+
+    # Find the first different company
+    different_company_row = group[group['Candidate Company'] != company1]
+    if not different_company_row.empty:
+        company2 = different_company_row.iloc[0]['Candidate Company']
+    else:
+        company2 = None  # or np.nan or ''
+
+    return pd.Series({
+        'Candidate ID': group['Candidate ID'].iloc[0],
+        'Candidate Company Previous': company2
+    })
+    
 # Streamlit UI
 st.title("Ezekia Org Chart Inputs")
 
@@ -311,6 +330,10 @@ if st.button("Fetch Candidates") and api_id:
         candidates = fetch_hotlist_candidates(api_id, api_tokens)
         st.success("Fetch hotlist candidates function 1!")
         candidates = candidates[candidates['Candidate Experience'] == 1]
+        candidates_previous = candidates.groupby('Candidate ID').apply(get_candidate_companies).reset_index(drop=True)
+
+        candidates = candidates.merge(candidates_previous, on='Candidate ID', how='left')
+        
         candidates['Candidate Seniority'] = candidates['Candidate Title'].apply(extract_seniority)
         candidates = candidates[[ 
             "Candidate ID", "Candidate Name", "Candidate Title",
