@@ -229,6 +229,18 @@ fallback_map = {
     'd': 'D'
 }
 
+# Normalize and map fallback + bracket values to final form
+fallback_map = {
+    'managing director': 'MD',
+    'executive director': 'ED',
+    'director': 'D',
+    'vice president': 'VP',
+    'vice-president': 'VP',
+    'vp': 'VP',
+    'md': 'MD',
+    'assoc': 'As',
+    'assoc.': 'As'}
+
 # Ordered list for substring matching
 ordered_fallbacks = list(fallback_map.keys())
 
