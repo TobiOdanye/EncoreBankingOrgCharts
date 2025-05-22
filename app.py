@@ -225,6 +225,7 @@ fallback_map = {
     'assoc.': 'As',
     'as': 'As',
     'an': 'An',
+    'analyst': 'An',
     'director': 'D',
     'd': 'D'
 }
@@ -239,7 +240,8 @@ ordered_fallback_map = {
     'vp': 'VP',
     'md': 'MD',
     'assoc': 'As',
-    'assoc.': 'As'}
+    'assoc.': 'As',
+    'analyst': 'An'}
 
 # Ordered list for substring matching
 ordered_fallbacks = list(ordered_fallback_map.keys())
