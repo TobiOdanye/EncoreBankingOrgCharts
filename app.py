@@ -230,7 +230,7 @@ fallback_map = {
 }
 
 # Normalize and map fallback + bracket values to final form
-fallback_map = {
+ordered_fallback_map = {
     'managing director': 'MD',
     'executive director': 'ED',
     'director': 'D',
@@ -242,7 +242,7 @@ fallback_map = {
     'assoc.': 'As'}
 
 # Ordered list for substring matching
-ordered_fallbacks = list(fallback_map.keys())
+ordered_fallbacks = list(ordered_fallback_map.keys())
 
 # Approved values for brackets (case-insensitive)
 allowed_bracket_values = set(fallback_map.keys())
