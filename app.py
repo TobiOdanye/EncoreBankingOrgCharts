@@ -385,7 +385,7 @@ if st.button("Fetch Candidates") and api_id:
 
         # Define scope and authenticate
         scope = ["https://www.googleapis.com/auth/spreadsheets"]
-        creds = ServiceAccountCredentials.from_json_keyfile_dict(service_account_info, scope)
+        creds = ServiceAccountCredentials.from_json_keyfile_name(serviceaccountkeys, scope)
         client = gspread.authorize(creds)
 
         # Open Google Sheet and worksheet
