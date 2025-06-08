@@ -390,7 +390,7 @@ if st.button("Fetch Candidates") and api_id:
         # Load credentials from Streamlit secrets
         service_account_info = dict(st.secrets["gcp_service_account"])  # <-- FIXED
         creds = ServiceAccountCredentials.from_json_keyfile_dict(service_account_info, scope)
-        print(json.dumps(st.secrets["gcp_service_account"], indent=2))
+        st.code(json.dumps(service_account_info, indent=2), language="json")
 
         # Authorize and access the Google Sheet
         client = gspread.authorize(creds)
