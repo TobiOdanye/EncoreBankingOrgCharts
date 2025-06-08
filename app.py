@@ -385,10 +385,13 @@ if st.button("Fetch Candidates") and api_id:
 
         # Define scope and authenticate
         scope = ["https://www.googleapis.com/auth/spreadsheets"]
-        creds = ServiceAccountCredentials.from_json_keyfile_name("serviceaccountkeys.json", scope)
-        client = gspread.authorize(creds)
 
-        # Open Google Sheet and worksheet
+        # Load credentials from Streamlit secrets
+        service_account_info = json.loads(st.secrets["gcp_service_account"].to_json())
+        creds = ServiceAccountCredentials.from_json_keyfile_dict(service_account_info, scope)
+
+        # Authorize and access the Google Sheet
+        client = gspread.authorize(creds)
         sheet = client.open_by_key("1kDZIOe5orm-OCaeCRxtSEmVU8kkoNdF_23zNj_0GHW0")
         worksheet = sheet.worksheet("LucidData")
 
