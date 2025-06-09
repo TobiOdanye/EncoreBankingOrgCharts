@@ -387,7 +387,7 @@ if st.button("Fetch Candidates") and api_id:
             client = gspread.authorize(creds)
             sheet = client.open_by_key(sheet_key)
             worksheet = sheet.worksheet("LucidData")
-            st.success("Ezekia Data Refreshed in Google Sheets. Refresh in Lucid to View Updates.")
+            st.success("Ezekia Data Sent to Google Sheets. Refresh in Lucid to View Updates.")
             
         except Exception as e:
             st.error(f"An error occurred: {e}")
