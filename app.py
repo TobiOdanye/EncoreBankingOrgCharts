@@ -346,7 +346,6 @@ if st.button("Fetch Candidates") and api_id:
     try:
         api_tokens = fetch_api_tokens()  # Get tokens here
         candidates = fetch_hotlist_candidates(api_id, api_tokens)
-        st.success("Fetch hotlist candidates function 1!")
         candidates_previous = candidates.groupby('Candidate ID').apply(get_candidate_companies).reset_index(drop=True)
 
         candidates = candidates.merge(candidates_previous, on='Candidate ID', how='left')
@@ -386,10 +385,9 @@ if st.button("Fetch Candidates") and api_id:
             service_account_info = dict(st.secrets["gcp_service_account"])
             creds = ServiceAccountCredentials.from_json_keyfile_dict(service_account_info, scope)
             client = gspread.authorize(creds)
-            st.code(json.dumps(service_account_info, indent=2), language="json")
             sheet = client.open_by_key(sheet_key)
             worksheet = sheet.worksheet("LucidData")
-            st.success("Connected to worksheet!")
+            st.success("Ezekia Data Refreshed in Google Sheets. Refresh in Lucid to View Updates.")
             
         except Exception as e:
             st.error(f"An error occurred: {e}")
