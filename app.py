@@ -384,18 +384,21 @@ if st.button("Fetch Candidates") and api_id:
             "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/ezekiastreamlitlucid%40ezekiastreamlitlucid.iam.gserviceaccount.com",
             "universe_domain": "googleapis.com"}
 
-        # Define scope and authenticate
-        scope = ["https://www.googleapis.com/auth/spreadsheets"]
+        try:
+            scope = ["https://www.googleapis.com/auth/spreadsheets"]
 
-        # Load credentials from Streamlit secrets
-        service_account_info = dict(st.secrets["gcp_service_account"])  # <-- FIXED
-        creds = ServiceAccountCredentials.from_json_keyfile_dict(service_account_info, scope)
-        st.code(json.dumps(service_account_info, indent=2), language="json")
+            service_account_info = dict(st.secrets["gcp_service_account"])
+            creds = ServiceAccountCredentials.from_json_keyfile_dict(service_account_info, scope)
 
-        # Authorize and access the Google Sheet
-        client = gspread.authorize(creds)
-        sheet = client.open_by_key("1kDZIOe5orm-OCaeCRxtSEmVU8kkoNdF_23zNj_0GHW0")
-        worksheet = sheet.worksheet("LucidData")
+            st.code(json.dumps(service_account_info, indent=2), language="json")
+
+            client = gspread.authorize(creds)
+            sheet = client.open_by_key("1kDZIOe5orm-OCaeCRxtSEmVU8kkoNdF_23zNj_0GHW0")
+            worksheet = sheet.worksheet("LucidData")
+            st.success("Connected to worksheet!")
+            
+        except Exception as e:
+            st.error(f"An error occurred: {e}")
 
         # Clear the worksheet and write new data
         worksheet.clear()
