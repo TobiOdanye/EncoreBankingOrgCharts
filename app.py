@@ -374,8 +374,8 @@ if st.button("Fetch Candidates") and api_id:
         # Define mapping of api_id to sheet_key
         sheet_keys = {
         "647987": "1kDZIOe5orm-OCaeCRxtSEmVU8kkoNdF_23zNj_0GHW0",
-        "656050": "1oUI2kUMCokKRJiyAR1GoeH0pd1WpkOoC3ckMaruYjfU",
-        # Add more mappings here}
+        "656050": "1oUI2kUMCokKRJiyAR1GoeH0pd1WpkOoC3ckMaruYjfU"}
+        # Add more mappings here
 
         sheet_key = sheet_keys.get(api_id)
 
