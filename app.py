@@ -389,10 +389,8 @@ if st.button("Fetch Candidates") and api_id:
 
             service_account_info = dict(st.secrets["gcp_service_account"])
             creds = ServiceAccountCredentials.from_json_keyfile_dict(service_account_info, scope)
-
-            st.code(json.dumps(service_account_info, indent=2), language="json")
-
             client = gspread.authorize(creds)
+            st.code(json.dumps(service_account_info, indent=2), language="json")
             sheet = client.open_by_key("1kDZIOe5orm-OCaeCRxtSEmVU8kkoNdF_23zNj_0GHW0")
             worksheet = sheet.worksheet("LucidData")
             st.success("Connected to worksheet!")
