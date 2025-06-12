@@ -344,7 +344,7 @@ st.title("Ezekia Org Chart Inputs")
 api_id = st.text_input("Enter Ezekia Project API ID")
 allowed_ids = [647987, 656050, 217903, 659219]
 
-if st.button("Fetch Candidates") and api_id not in allowed_ids:
+if st.button("Fetch Candidates") and api_id in allowed_ids:
     
     try:
         api_tokens = fetch_api_tokens()  # Get tokens here
@@ -415,7 +415,7 @@ if st.button("Fetch Candidates") and api_id not in allowed_ids:
     except Exception as e:
         st.error(f"Error occurred: {e}")
 
-elif api_id in allowed_ids:
+elif api_id not in allowed_ids:
     st.error("Project ID is not an Approved Hotlist")
     sys.exit()  # or raise SystemExit
 
