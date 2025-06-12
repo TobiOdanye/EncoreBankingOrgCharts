@@ -341,6 +341,11 @@ st.title("Ezekia Org Chart Inputs")
 
 # Input
 api_id = st.text_input("Enter Ezekia Project API ID")
+allowed_ids = [647987, 656050, 217903, 659219]
+
+if api_id not in allowed_ids:
+    print("Unauthorized Project ID. Only Approved Hotlists are Allowed.")
+    sys.exit()  # or raise SystemExit
 
 if st.button("Fetch Candidates") and api_id:
     try:
