@@ -2,7 +2,6 @@ streamlit
 pandas
 requests
 openpyxl
-sys
 gspread==5.12.0
 oauth2client==4.1.3
 gspread_dataframe==3.3.1
