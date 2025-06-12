@@ -343,80 +343,80 @@ st.title("Ezekia Org Chart Inputs")
 api_id = st.text_input("Enter Ezekia Project API ID")
 allowed_ids = [647987, 656050, 217903, 659219]
 
-if st.button("Fetch Candidates") and api_id in allowed_ids:
-    
-    try:
-        api_tokens = fetch_api_tokens()  # Get tokens here
-        candidates = fetch_hotlist_candidates(api_id, api_tokens)
-        candidates_previous = candidates.groupby('Candidate ID').apply(get_candidate_companies).reset_index(drop=True)
-
-        candidates = candidates.merge(candidates_previous, on='Candidate ID', how='left')
-        candidates = candidates[candidates['Candidate Experience'] == 1]
-        
-        candidates['Candidate Seniority'] = candidates['Candidate Title'].apply(extract_seniority)
-        candidates = candidates[[ 
-            "Candidate ID", "Candidate Name", "Candidate Title",
-            "Candidate Company", "Candidate Location", "Candidate Seniority", "Candidate Company Previous"
-        ]]
-        
-        candidates["Lucid Space"] = ""
-
-        candidates.loc[candidates['Candidate Location'].str.contains('Paris', case=False, na=False), 'Candidate Location'] = 'Paris'
-        candidates.loc[candidates['Candidate Location'].str.contains('London', case=False, na=False), 'Candidate Location'] = 'London'
-        candidates.loc[candidates['Candidate Location'].str.contains('New York', case=False, na=False), 'Candidate Location'] = 'New York'
-        candidates.loc[candidates['Candidate Location'].str.contains('Singapore', case=False, na=False), 'Candidate Location'] = 'Singapore'
-        
-        candidate_reports_into = fetch_candidates_additional_labels(candidates, api_tokens)
-        candidates_output = pd.merge(candidates, candidate_reports_into, on='Candidate ID', how='inner')
-        
-        st.success("Data fetched successfully!")
-        st.dataframe(candidates_output)
-
-        # Define mapping of api_id to sheet_key
-        sheet_keys = {
-        "647987": "1kDZIOe5orm-OCaeCRxtSEmVU8kkoNdF_23zNj_0GHW0",
-        "656050": "1oUI2kUMCokKRJiyAR1GoeH0pd1WpkOoC3ckMaruYjfU",
-        "217903": "1zK7H16AlYKsvfX-aMLWjUAqKF4wqQAtnfJSuQPRibRE",
-        "659219": "1zA8qmiJ5ue73PDWaEbxijb2Fttkl7z7MfehuDLhuQnY"}
-        # Add more mappings here
-
-        sheet_key = sheet_keys.get(api_id)
-
+if st.button("Fetch Candidates"):
+    if api_id in allowed_ids:
         try:
-            scope = ["https://www.googleapis.com/auth/spreadsheets"]
-
-            service_account_info = dict(st.secrets["gcp_service_account"])
-            creds = ServiceAccountCredentials.from_json_keyfile_dict(service_account_info, scope)
-            client = gspread.authorize(creds)
-            sheet = client.open_by_key(sheet_key)
-            worksheet = sheet.worksheet("LucidData")
-            st.success("Ezekia Data Sent to Google Sheets. Refresh in Lucid to View Updates.")
-            
-        except Exception as e:
-            st.error(f"An error occurred: {e}")
-
-        # Clear the worksheet and write new data
-        worksheet.clear()
-        set_with_dataframe(worksheet, candidates_output)
-
-        # Excel export
-        # excel_buffer = io.BytesIO()
-        # with pd.ExcelWriter(excel_buffer, engine='openpyxl') as writer:
-        #    candidates_output.to_excel(writer, index=False, sheet_name='Candidates')
-
-        # st.download_button(
-        #   label="Download Excel",
-        #   data=excel_buffer.getvalue(),
-        #   file_name="ezekia_candidates.xlsx",
-        #   mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-        #)
-
-    except Exception as e:
-        st.error(f"Error occurred: {e}")
-
-elif api_id not in allowed_ids:
-    st.error("Project ID is not an Approved Hotlist")
-
-else:
-    st.error("Program Error")
+            api_tokens = fetch_api_tokens()  # Get tokens here
+            candidates = fetch_hotlist_candidates(api_id, api_tokens)
+            candidates_previous = candidates.groupby('Candidate ID').apply(get_candidate_companies).reset_index(drop=True)
     
+            candidates = candidates.merge(candidates_previous, on='Candidate ID', how='left')
+            candidates = candidates[candidates['Candidate Experience'] == 1]
+            
+            candidates['Candidate Seniority'] = candidates['Candidate Title'].apply(extract_seniority)
+            candidates = candidates[[ 
+                "Candidate ID", "Candidate Name", "Candidate Title",
+                "Candidate Company", "Candidate Location", "Candidate Seniority", "Candidate Company Previous"
+            ]]
+            
+            candidates["Lucid Space"] = ""
+    
+            candidates.loc[candidates['Candidate Location'].str.contains('Paris', case=False, na=False), 'Candidate Location'] = 'Paris'
+            candidates.loc[candidates['Candidate Location'].str.contains('London', case=False, na=False), 'Candidate Location'] = 'London'
+            candidates.loc[candidates['Candidate Location'].str.contains('New York', case=False, na=False), 'Candidate Location'] = 'New York'
+            candidates.loc[candidates['Candidate Location'].str.contains('Singapore', case=False, na=False), 'Candidate Location'] = 'Singapore'
+            
+            candidate_reports_into = fetch_candidates_additional_labels(candidates, api_tokens)
+            candidates_output = pd.merge(candidates, candidate_reports_into, on='Candidate ID', how='inner')
+            
+            st.success("Data fetched successfully!")
+            st.dataframe(candidates_output)
+    
+            # Define mapping of api_id to sheet_key
+            sheet_keys = {
+            "647987": "1kDZIOe5orm-OCaeCRxtSEmVU8kkoNdF_23zNj_0GHW0",
+            "656050": "1oUI2kUMCokKRJiyAR1GoeH0pd1WpkOoC3ckMaruYjfU",
+            "217903": "1zK7H16AlYKsvfX-aMLWjUAqKF4wqQAtnfJSuQPRibRE",
+            "659219": "1zA8qmiJ5ue73PDWaEbxijb2Fttkl7z7MfehuDLhuQnY"}
+            # Add more mappings here
+    
+            sheet_key = sheet_keys.get(api_id)
+    
+            try:
+                scope = ["https://www.googleapis.com/auth/spreadsheets"]
+    
+                service_account_info = dict(st.secrets["gcp_service_account"])
+                creds = ServiceAccountCredentials.from_json_keyfile_dict(service_account_info, scope)
+                client = gspread.authorize(creds)
+                sheet = client.open_by_key(sheet_key)
+                worksheet = sheet.worksheet("LucidData")
+                st.success("Ezekia Data Sent to Google Sheets. Refresh in Lucid to View Updates.")
+                
+            except Exception as e:
+                st.error(f"An error occurred: {e}")
+    
+            # Clear the worksheet and write new data
+            worksheet.clear()
+            set_with_dataframe(worksheet, candidates_output)
+    
+            # Excel export
+            # excel_buffer = io.BytesIO()
+            # with pd.ExcelWriter(excel_buffer, engine='openpyxl') as writer:
+            #    candidates_output.to_excel(writer, index=False, sheet_name='Candidates')
+    
+            # st.download_button(
+            #   label="Download Excel",
+            #   data=excel_buffer.getvalue(),
+            #   file_name="ezekia_candidates.xlsx",
+            #   mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+            #)
+    
+        except Exception as e:
+            st.error(f"Error occurred: {e}")
+    
+    elif api_id not in allowed_ids:
+        st.error("Project ID is not an Approved Hotlist")
+    
+    else:
+        st.error("Program Error")
+        
