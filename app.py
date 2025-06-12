@@ -4,7 +4,6 @@ import re
 import io
 import streamlit as st
 import json
-import sys
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 from gspread_dataframe import set_with_dataframe
@@ -417,7 +416,6 @@ if st.button("Fetch Candidates") and api_id in allowed_ids:
 
 elif api_id not in allowed_ids:
     st.error("Project ID is not an Approved Hotlist")
-    sys.exit()  # or raise SystemExit
 
 else:
     st.error("Program Error")
