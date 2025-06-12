@@ -344,11 +344,8 @@ st.title("Ezekia Org Chart Inputs")
 api_id = st.text_input("Enter Ezekia Project API ID")
 allowed_ids = [647987, 656050, 217903, 659219]
 
-if api_id not in allowed_ids:
-    print("Unauthorized Project ID. Only Approved Hotlists are Allowed.")
-    sys.exit()  # or raise SystemExit
-
-if st.button("Fetch Candidates") and api_id:
+if st.button("Fetch Candidates") and api_id not in allowed_ids:
+    
     try:
         api_tokens = fetch_api_tokens()  # Get tokens here
         candidates = fetch_hotlist_candidates(api_id, api_tokens)
@@ -418,3 +415,5 @@ if st.button("Fetch Candidates") and api_id:
     except Exception as e:
         st.error(f"Error occurred: {e}")
 
+else:
+    sys.exit()  # or raise SystemExit
