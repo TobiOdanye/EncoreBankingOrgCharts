@@ -415,5 +415,10 @@ if st.button("Fetch Candidates") and api_id not in allowed_ids:
     except Exception as e:
         st.error(f"Error occurred: {e}")
 
-else:
+elif api_id in allowed_ids:
+    st.error("Project ID is not an Approved Hotlist")
     sys.exit()  # or raise SystemExit
+
+else:
+    st.error("Program Error")
+    
