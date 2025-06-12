@@ -341,7 +341,7 @@ st.title("Ezekia Org Chart Inputs")
 
 # Input
 api_id = st.text_input("Enter Ezekia Project API ID")
-allowed_ids = [647987, 656050, 217903, 659219]
+allowed_ids = ["647987", "656050", "217903", "659219"]
 
 if st.button("Fetch Candidates"):
     if api_id in allowed_ids:
