@@ -1,5 +1,6 @@
 import pandas as pd
 import requests
+import itertools
 import re
 import io
 import streamlit as st
@@ -336,10 +337,13 @@ def get_candidate_companies(group):
         'Candidate Company Previous': company2
     })
 
+# Create a round-robin iterator from your token list
+token_iterator = itertools.cycle(api_tokens)
+
 def get_energy_th_product(candidateId, api_tokens):
 
     # Headers to authenticate API request for total counts
-    api_token = api_tokens[0]
+    api_token = next(token_iterator)
     headers = {"Authorization": f"Bearer {api_token}",
                "Content-Type": "application/json"}
 
@@ -355,7 +359,7 @@ def get_energy_th_product(candidateId, api_tokens):
 def get_energy_th_subdisc(candidateId, api_tokens):
 
     # Headers to authenticate API request for total counts
-    api_token = api_tokens[0]
+    api_token = next(token_iterator)
     headers = {"Authorization": f"Bearer {api_token}",
                "Content-Type": "application/json"}
     
