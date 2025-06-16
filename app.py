@@ -337,9 +337,6 @@ def get_candidate_companies(group):
         'Candidate Company Previous': company2
     })
 
-# Create a round-robin iterator from your token list
-token_iterator = itertools.cycle(api_tokens)
-
 def get_energy_th_product(candidateId, api_tokens):
 
     # Headers to authenticate API request for total counts
@@ -406,6 +403,8 @@ if st.button("Fetch Candidates"):
             candidates_output = pd.merge(candidates, candidate_reports_into, on='Candidate ID', how='inner')
 
             # Example: apply to your DataFrame
+            # Create a round-robin iterator from your token list
+            token_iterator = itertools.cycle(api_tokens)
             if api_id == "659219":
                 candidates_output["Energy TH Product"] = candidates_output["Candidate ID"].apply(lambda cid: get_energy_th_product(cid, api_tokens))
                 candidates_output["Energy TH Sub-Discipline"] = candidates_output["Candidate ID"].apply(lambda cid: get_energy_th_product(cid, api_tokens))
