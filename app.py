@@ -407,7 +407,7 @@ if st.button("Fetch Candidates"):
             token_iterator = itertools.cycle(api_tokens)
             if api_id == "659219":
                 candidates_output["Energy TH Product"] = candidates_output["Candidate ID"].apply(lambda cid: get_energy_th_product(cid, api_tokens))
-                candidates_output["Energy TH Sub-Discipline"] = candidates_output["Candidate ID"].apply(lambda cid: get_energy_th_product(cid, api_tokens))
+                candidates_output["Energy TH Sub-Discipline"] = candidates_output["Candidate ID"].apply(lambda cid: get_energy_th_subdisc(cid, api_tokens))
             
             st.success("Data fetched successfully!")
             st.dataframe(candidates_output)
