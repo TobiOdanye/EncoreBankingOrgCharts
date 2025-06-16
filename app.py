@@ -335,7 +335,29 @@ def get_candidate_companies(group):
         'Candidate ID': group['Candidate ID'].iloc[0],
         'Candidate Company Previous': company2
     })
+
+def get_energy_th_product(candidateId):
+
+    page_url = f"https://ezekia.com/api/people/{candidateId}/additional-info"
+    page_response = requests.get(page_url, headers=headers)
+
+    for item in page_response.json()["data"]:
+        if item["field"]["id"] == 11806:
+            return item["value"]
     
+    return None
+
+def get_energy_th_subdisc(candidateId):
+
+    page_url = f"https://ezekia.com/api/people/{candidateId}/additional-info"
+    page_response = requests.get(page_url, headers=headers)
+
+    for item in page_response.json()["data"]:
+        if item["field"]["id"] == 11807:
+            return item["value"]
+    
+    return None
+       
 # Streamlit UI
 st.title("Ezekia Org Chart Inputs")
 
@@ -368,6 +390,11 @@ if st.button("Fetch Candidates"):
             
             candidate_reports_into = fetch_candidates_additional_labels(candidates, api_tokens)
             candidates_output = pd.merge(candidates, candidate_reports_into, on='Candidate ID', how='inner')
+
+            # Example: apply to your DataFrame
+            if api_id == "659219":
+                candidates_output["Energy TH Product"] = candidates_output["candidateId"].apply(get_energy_th_product)
+                candidates_output["Energy TH Sub-Discipline"] = candidates_output["candidateId"].apply(get_energy_th_subdisc)
             
             st.success("Data fetched successfully!")
             st.dataframe(candidates_output)
