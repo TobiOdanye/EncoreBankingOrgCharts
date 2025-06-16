@@ -336,7 +336,12 @@ def get_candidate_companies(group):
         'Candidate Company Previous': company2
     })
 
-def get_energy_th_product(candidateId):
+def get_energy_th_product(candidateId, api_tokens):
+
+    # Headers to authenticate API request for total counts
+    api_token = api_tokens[0]
+    headers = {"Authorization": f"Bearer {api_token}",
+               "Content-Type": "application/json"}
 
     page_url = f"https://ezekia.com/api/people/{candidateId}/additional-info"
     page_response = requests.get(page_url, headers=headers)
@@ -347,8 +352,13 @@ def get_energy_th_product(candidateId):
     
     return None
 
-def get_energy_th_subdisc(candidateId):
+def get_energy_th_subdisc(candidateId, api_tokens):
 
+    # Headers to authenticate API request for total counts
+    api_token = api_tokens[0]
+    headers = {"Authorization": f"Bearer {api_token}",
+               "Content-Type": "application/json"}
+    
     page_url = f"https://ezekia.com/api/people/{candidateId}/additional-info"
     page_response = requests.get(page_url, headers=headers)
 
