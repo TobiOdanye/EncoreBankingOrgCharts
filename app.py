@@ -403,8 +403,8 @@ if st.button("Fetch Candidates"):
 
             # Example: apply to your DataFrame
             if api_id == "659219":
-                candidates_output["Energy TH Product"] = candidates_output["Candidate ID"].apply(get_energy_th_product)
-                candidates_output["Energy TH Sub-Discipline"] = candidates_output["Candidate ID"].apply(get_energy_th_subdisc)
+                candidates_output["Energy TH Product"] = candidates_output["Candidate ID"].apply(lambda cid: get_energy_th_product(cid, api_tokens))
+                candidates_output["Energy TH Sub-Discipline"] = candidates_output["Candidate ID"].apply(lambda cid: get_energy_th_product(cid, api_tokens))
             
             st.success("Data fetched successfully!")
             st.dataframe(candidates_output)
