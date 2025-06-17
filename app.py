@@ -334,6 +334,7 @@ def get_candidate_companies(group):
         company2_date = different_company_row.iloc[0]['End Date']
     else:
         company2 = None  # or np.nan or ''
+        company2_date = None
 
     return pd.Series({
         'Candidate ID': group['Candidate ID'].iloc[0],
