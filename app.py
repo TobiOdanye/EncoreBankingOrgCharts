@@ -195,7 +195,9 @@ def fetch_hotlist_candidates(api_id, api_tokens):
                     "Candidate Experience": candidate_role_number,
                     "Candidate Title": title,
                     "Candidate Company": company,
-                    "Candidate Location": location
+                    "Candidate Location": location,
+                    "Start Date": startdate,
+                    "End Date": enddate
                 }
 
                 # New key-value pair to add at the start
@@ -329,12 +331,14 @@ def get_candidate_companies(group):
     different_company_row = group[group['Candidate Company'] != company1]
     if not different_company_row.empty:
         company2 = different_company_row.iloc[0]['Candidate Company']
+        company2_date = different_company_row.iloc[0]['End Date']
     else:
         company2 = None  # or np.nan or ''
 
     return pd.Series({
         'Candidate ID': group['Candidate ID'].iloc[0],
-        'Candidate Company Previous': company2
+        'Candidate Company Previous': company2,
+        'Candidate Company Previous End Date': company2_date
     })
 
 def get_energy_th_product(candidateId, api_tokens):
@@ -381,6 +385,8 @@ if st.button("Fetch Candidates"):
         try:
             api_tokens = fetch_api_tokens()  # Get tokens here
             candidates = fetch_hotlist_candidates(api_id, api_tokens)
+            candidates.drop('End Date', axis=1, inplace=True)
+            
             candidates_previous = candidates.groupby('Candidate ID').apply(get_candidate_companies).reset_index(drop=True)
     
             candidates = candidates.merge(candidates_previous, on='Candidate ID', how='left')
