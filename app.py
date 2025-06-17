@@ -385,9 +385,9 @@ if st.button("Fetch Candidates"):
         try:
             api_tokens = fetch_api_tokens()  # Get tokens here
             candidates = fetch_hotlist_candidates(api_id, api_tokens)
-            candidates.drop('End Date', axis=1, inplace=True)
             
             candidates_previous = candidates.groupby('Candidate ID').apply(get_candidate_companies).reset_index(drop=True)
+            candidates.drop('End Date', axis=1, inplace=True)
     
             candidates = candidates.merge(candidates_previous, on='Candidate ID', how='left')
             candidates = candidates[candidates['Candidate Experience'] == 1]
@@ -395,7 +395,7 @@ if st.button("Fetch Candidates"):
             candidates['Candidate Seniority'] = candidates['Candidate Title'].apply(extract_seniority)
             candidates = candidates[[ 
                 "Candidate ID", "Candidate Name", "Candidate Title",
-                "Candidate Company", "Candidate Location", "Candidate Seniority", "Candidate Company Previous"
+                "Candidate Company", "Start Date", "Candidate Location", "Candidate Seniority", "Candidate Company Previous", "Candidate Company Previous End Date"
             ]]
             
             candidates["Lucid Space"] = ""
