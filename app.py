@@ -328,7 +328,7 @@ def get_candidate_companies(group):
     company1 = company1_row['Candidate Company']
 
     # Find the first different company (≠ company1)
-    different_company_rows = group[group['Candidate Company'] != company1]
+    different_company_rows = group[group['Candidate Company'] != company1].sort_values('Candidate Experience', ascending=True)
     if not different_company_rows.empty:
         diff_row = different_company_rows.iloc[0]
         company2 = diff_row['Candidate Company']
@@ -337,13 +337,13 @@ def get_candidate_companies(group):
 
         # Get all company1 rows that occurred *after* the switch (i.e. higher experience number)
         company1_prior_rows = group[
-            (group['Candidate Experience'] > company2_experience) &
+            (group['Candidate Experience'] < company2_experience) &
             (group['Candidate Company'] == company1)
-        ]
+        ].sort_values('Candidate Experience', ascending=False)
 
         if not company1_prior_rows.empty:
             # Choose the most recent one before the switch (i.e. lowest exp > company2 exp)
-            closest_exp_row = company1_prior_rows.sort_values('Candidate Experience', ascending=False).iloc[0]
+            closest_exp_row = company1_prior_rows.idxmax()
             company1_start_date = closest_exp_row['Start Date']
         else:
             company1_start_date = None
