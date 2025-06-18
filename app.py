@@ -339,9 +339,7 @@ def get_candidate_companies(group):
         company1_prior_rows = group[
             (group['Candidate Experience'] < company2_experience) &
             (group['Candidate Company'] == company1)
-        ].sort_values('Candidate Experience', ascending=False)
-
-        st.dataframe(company1_prior_rows)
+        ].sort_values('Candidate Experience', ascending=True)
 
         if not company1_prior_rows.empty:
             # Choose the most recent one before the switch (i.e. lowest exp > company2 exp)
