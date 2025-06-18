@@ -324,22 +324,35 @@ def get_candidate_companies(group):
     # Sort by experience
     group = group.sort_values(by='Candidate Experience')
     
-    # Get company for experience 1
-    company1 = group.loc[group['Candidate Experience'] == 1, 'Candidate Company'].values[0]
+    # Get company at experience 1
+    company1_row = group[group['Candidate Experience'] == 1].iloc[0]
+    company1 = company1_row['Candidate Company']
 
     # Find the first different company
     different_company_row = group[group['Candidate Company'] != company1]
     if not different_company_row.empty:
-        company2 = different_company_row.iloc[0]['Candidate Company']
-        company2_date = different_company_row.iloc[0]['End Date']
+        diff_row = different_company_row.iloc[0]
+        company2 = diff_row['Candidate Company']
+        company2_date = diff_row['End Date']
+
+        # Get max experience between 0 and the different company experience
+        max_exp_range = group[(group['Candidate Experience'] >= 0) &
+                              (group['Candidate Experience'] < diff_row['Candidate Experience'])]
+        if not max_exp_range.empty:
+            max_exp_row = max_exp_range.loc[max_exp_range['Candidate Experience'].idxmax()]
+            company1_start_date = max_exp_row['Start Date']
+        else:
+            company1_start_date = None
     else:
-        company2 = None  # or np.nan or ''
+        company2 = None
         company2_date = None
+        company1_start_date = None
 
     return pd.Series({
         'Candidate ID': group['Candidate ID'].iloc[0],
         'Candidate Company Previous': company2,
-        'Candidate Company Previous End Date': company2_date
+        'Candidate Company Previous End Date': company2_date,
+        'Candidate Company Start Date': company1_start_date
     })
 
 def get_energy_th_product(candidateId, api_tokens):
