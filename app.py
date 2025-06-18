@@ -321,28 +321,29 @@ def fetch_candidates_additional_labels(hotlist_df_trans, api_tokens):
     return df
 
 def get_candidate_companies(group):
-    # Sort by ascending Candidate Experience (1 = current, increasing = older)
     group = group.sort_values(by='Candidate Experience')
-    
-    # Get current company (at experience 1)
+
+    # Get company at experience 1
     company1_row = group[group['Candidate Experience'] == 1].iloc[0]
     company1 = company1_row['Candidate Company']
 
-    # Find first experience with a different company
+    # Find the first different company (≠ company1)
     different_company_rows = group[group['Candidate Company'] != company1]
     if not different_company_rows.empty:
-        # This gives the *first older* different company
         diff_row = different_company_rows.iloc[0]
         company2 = diff_row['Candidate Company']
         company2_date = diff_row['End Date']
+        company2_experience = diff_row['Candidate Experience']
 
-        # Get all company1 rows that occurred *before* the switch
+        # Get all company1 rows that occurred *after* the switch (i.e. higher experience number)
         company1_prior_rows = group[
-            (group['Candidate Experience'] < diff_row['Candidate Experience']) &
+            (group['Candidate Experience'] > company2_experience) &
             (group['Candidate Company'] == company1)
         ]
+
         if not company1_prior_rows.empty:
-            closest_exp_row = company1_prior_rows.iloc[0]
+            # Choose the most recent one before the switch (i.e. lowest exp > company2 exp)
+            closest_exp_row = company1_prior_rows.sort_values('Candidate Experience', ascending=False).iloc[0]
             company1_start_date = closest_exp_row['Start Date']
         else:
             company1_start_date = None
