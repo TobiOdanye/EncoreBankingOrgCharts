@@ -341,7 +341,7 @@ def get_candidate_companies(group):
             (group['Candidate Company'] == company1)
         ].sort_values('Candidate Experience', ascending=False)
 
-        if company1_prior_rows['Candidate ID' == 18404928:
+        if company1_prior_rows['Candidate ID'] == 18404928:
             st.dataframe(company1_prior_rows)
             st.dataframe(company1_prior_rows.sort_values('Candidate Experience', ascending=False).iloc[0])
         
