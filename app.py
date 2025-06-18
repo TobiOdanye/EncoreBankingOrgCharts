@@ -341,9 +341,13 @@ def get_candidate_companies(group):
             (group['Candidate Company'] == company1)
         ].sort_values('Candidate Experience', ascending=False)
 
+        if company1_prior_rows['Candidate ID' == 18404928:
+            st.dataframe(company1_prior_rows)
+            st.dataframe(company1_prior_rows.sort_values('Candidate Experience', ascending=False).iloc[0])
+        
         if not company1_prior_rows.empty:
             # Choose the most recent one before the switch (i.e. lowest exp > company2 exp)
-            closest_exp_row = company1_prior_rows.sort_values('Candidate Experience', ascending=False).iloc[1]
+            closest_exp_row = company1_prior_rows.sort_values('Candidate Experience', ascending=False).iloc[0]
             company1_start_date = closest_exp_row['Start Date']
         else:
             company1_start_date = None
