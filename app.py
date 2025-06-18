@@ -343,7 +343,8 @@ def get_candidate_companies(group):
 
         if not company1_prior_rows.empty:
             # Choose the most recent one before the switch (i.e. lowest exp > company2 exp)
-            closest_exp_row = company1_prior_rows.idxmax()
+            row_idx = company1_prior_rows['Candidate Experience'].idxmax()
+            closest_exp_row = company1_prior_rows.loc[row_idx]
             company1_start_date = closest_exp_row['Start Date']
         else:
             company1_start_date = None
