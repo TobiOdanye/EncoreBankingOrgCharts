@@ -1,7 +1,7 @@
 import pandas as pd
 import requests
 import itertools
-import datetime
+from datetime import datetime
 import re
 import io
 import streamlit as st
