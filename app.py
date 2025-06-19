@@ -433,6 +433,7 @@ if st.button("Fetch Candidates"):
             ]]
             
             candidates["Lucid Space"] = ""
+            candidates["Lucid Space 2"] = ""
     
             candidates.loc[candidates['Candidate Location'].str.contains('Paris', case=False, na=False), 'Candidate Location'] = 'Paris'
             candidates.loc[candidates['Candidate Location'].str.contains('London', case=False, na=False), 'Candidate Location'] = 'London'
