@@ -474,12 +474,15 @@ if st.button("Fetch Candidates"):
                            "Trafigura": "Bank",
                            "J.P. Morgan": "Bank",
                            "UniCredit": "Bank",
-                           "Marex": "Bank"}
+                           "Marex": "Bank",
+                           "Mercuria": "Trading House",
+                           "Vitol": "Trading House"}
 
             # Convert to a DataFrame
             entity_map = pd.DataFrame(list(entity_dict.items()), columns=["Name", "Type"])
 
-            candidates_output["Entity Type"] = candidates_output["Candidate Company"].apply(lambda x: assign_type(x, entity_map))
+            candidates_output["Current Entity Type"] = candidates_output["Candidate Company"].apply(lambda x: assign_type(x, entity_map))
+            candidates_output["Previous Entity Type"] = candidates_output["Candidate Company Previous"].apply(lambda x: assign_type(x, entity_map))
 
             st.success("Data fetched successfully!")
             st.dataframe(candidates_output)
