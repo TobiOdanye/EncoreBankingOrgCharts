@@ -406,7 +406,15 @@ def get_energy_th_subdisc(candidateId, api_tokens):
             return item["value"]
     
     return None
-       
+
+
+def assign_type(company_name, entity_df):
+    for _, row in entity_df.iterrows():
+        if row['Name'].lower() in company_name.lower():
+            return row['Type']
+    return None  # Or "Unknown"
+
+
 # Streamlit UI
 st.title("Ezekia Org Chart Inputs")
 
@@ -428,8 +436,8 @@ if st.button("Fetch Candidates"):
             
             candidates['Candidate Seniority'] = candidates['Candidate Title'].apply(extract_seniority)
             candidates = candidates[[ 
-                "Candidate ID", "Candidate Name", "Candidate Title",
-                "Candidate Company", "Candidate Company Start Date", "Candidate Location", "Candidate Seniority", "Candidate Company Previous", "Candidate Company Previous End Date", "Candidate Move Within Year", "Candidate Move Within 6 Months"
+                "Candidate ID", "Candidate Name", "Candidate Title", "Candidate Company", "Candidate Company Start Date", "Candidate Location", 
+                "Candidate Seniority", "Candidate Company Previous", "Candidate Company Previous End Date", "Candidate Move Within Year", "Candidate Move Within 6 Months"
             ]]
             
             candidates["Lucid Space"] = ""
@@ -450,6 +458,29 @@ if st.button("Fetch Candidates"):
                 candidates_output["Energy TH Product"] = candidates_output["Candidate ID"].apply(lambda cid: get_energy_th_product(cid, api_tokens))
                 candidates_output["Energy TH Sub-Discipline"] = candidates_output["Candidate ID"].apply(lambda cid: get_energy_th_subdisc(cid, api_tokens))
             
+            # Define as a dictionary
+            entity_dict = {"Standard Chartered": "Bank",
+                            "ICBC": "Bank",
+                           "Bank of America": "Bank",
+                           "Citi": "Bank",
+                           "Macquarie": "Bank",
+                           "Goldman Sachs": "Bank",
+                           "Mitsui": "Bank",
+                           "BNP": "Bank",
+                           "Commerzbank": "Bank",
+                           "Lloyds": "Bank",
+                           "Morgan Stanley": "Bank",
+                           "Natixis": "Bank",
+                           "Trafigura": "Bank",
+                           "J.P. Morgan": "Bank",
+                           "UniCredit": "Bank",
+                           "Marex": "Bank"}
+
+            # Convert to a DataFrame
+            entity_map = pd.DataFrame(list(entity_dict.items()), columns=["Name", "Type"])
+
+            candidates_output["Entity Type"] = candidates_output["Candidate Company"].apply(lambda x: assign_type(x, entity_map))
+
             st.success("Data fetched successfully!")
             st.dataframe(candidates_output)
     
