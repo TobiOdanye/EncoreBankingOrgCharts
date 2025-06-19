@@ -359,8 +359,8 @@ def get_candidate_companies(group):
     # Ensure your date column is in datetime format
     if company1_start_date is not None:
         company1_start_date_time = pd.to_datetime(company1_start_date)
-        within_year_flag = company1_start_date.apply(lambda date: 1 if pd.notnull(date) and (now - date).days <= 365 else 0)
-        within_half_year_flag = company1_start_date.apply(lambda date: 1 if pd.notnull(date) and (now - date).days <= 182.5 else 0)
+        within_year_flag = company1_start_date_time.apply(lambda date: 1 if pd.notnull(date) and (now - date).days <= 365 else 0)
+        within_half_year_flag = company1_start_date_time.apply(lambda date: 1 if pd.notnull(date) and (now - date).days <= 182.5 else 0)
                                                           
     else:
         within_year_flag = None
