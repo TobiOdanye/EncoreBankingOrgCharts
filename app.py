@@ -429,7 +429,7 @@ if st.button("Fetch Candidates"):
             candidates['Candidate Seniority'] = candidates['Candidate Title'].apply(extract_seniority)
             candidates = candidates[[ 
                 "Candidate ID", "Candidate Name", "Candidate Title",
-                "Candidate Company", "Candidate Company Start Date", "Candidate Location", "Candidate Seniority", "Candidate Company Previous", "Candidate Company Previous End Date"
+                "Candidate Company", "Candidate Company Start Date", "Candidate Location", "Candidate Seniority", "Candidate Company Previous", "Candidate Company Previous End Date", "Candidate Move Within Year", "Candidate Move Within 6 Months"
             ]]
             
             candidates["Lucid Space"] = ""
