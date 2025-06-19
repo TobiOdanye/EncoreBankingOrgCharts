@@ -361,7 +361,7 @@ def get_candidate_companies(group):
         within_year_flag = company1_start_date.apply(lambda date: 1 if pd.notnull(date) and (now - date).days <= 365 else 0)
         within_half_year_flag = company1_start_date.apply(lambda date: 1 if pd.notnull(date) and (now - date).days <= 182.5 else 0  # Approx. 6 months)
                                                           
-   else:
+    else:
         within_year_flag = None
         within_half_year_flag = None
                                                           
@@ -369,7 +369,9 @@ def get_candidate_companies(group):
         'Candidate ID': group['Candidate ID'].iloc[0],
         'Candidate Company Previous': company2,
         'Candidate Company Previous End Date': company2_date,
-        'Candidate Company Start Date': company1_start_date
+        'Candidate Company Start Date': company1_start_date,
+        'Candidate Move Within Year': within_year_flag,
+        'Candidate Move Within 6 Months': within_half_year_flag
     })
 
 def get_energy_th_product(candidateId, api_tokens):
