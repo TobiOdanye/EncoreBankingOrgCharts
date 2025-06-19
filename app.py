@@ -340,10 +340,6 @@ def get_candidate_companies(group):
             (group['Candidate Experience'] < company2_experience) &
             (group['Candidate Company'] == company1)
         ].sort_values('Candidate Experience', ascending=False)
-
-        if 18404928 in company1_prior_rows['Candidate ID'].values:
-            st.dataframe(company1_prior_rows)
-            st.dataframe(company1_prior_rows.sort_values('Candidate Experience', ascending=False).iloc[0])
         
         if not company1_prior_rows.empty:
             # Choose the most recent one before the switch (i.e. lowest exp > company2 exp)
@@ -356,6 +352,19 @@ def get_candidate_companies(group):
         company2_date = None
         company1_start_date = None
 
+    # Get current date
+    now = datetime.now()
+    
+    # Ensure your date column is in datetime format
+    if company1_start_date is not None:
+        company1_start_date_time = pd.to_datetime(company1_start_date)
+        within_year_flag = company1_start_date.apply(lambda date: 1 if pd.notnull(date) and (now - date).days <= 365 else 0)
+        within_half_year_flag = company1_start_date.apply(lambda date: 1 if pd.notnull(date) and (now - date).days <= 182.5 else 0  # Approx. 6 months)
+                                                          
+   else:
+        within_year_flag = None
+        within_half_year_flag = None
+                                                          
     return pd.Series({
         'Candidate ID': group['Candidate ID'].iloc[0],
         'Candidate Company Previous': company2,
