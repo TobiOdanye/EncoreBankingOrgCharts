@@ -462,24 +462,13 @@ if st.button("Fetch Candidates"):
                 candidates_output["Energy TH Sub-Discipline"] = candidates_output["Candidate ID"].apply(lambda cid: get_energy_th_subdisc(cid, api_tokens))
             
             # Define as a dictionary
-            entity_dict = {"Standard Chartered": "Bank",
-                            "ICBC": "Bank",
-                           "Bank of America": "Bank",
-                           "Citi": "Bank",
-                           "Macquarie": "Bank",
-                           "Goldman Sachs": "Bank",
-                           "Mitsui": "Bank",
-                           "BNP": "Bank",
-                           "Commerzbank": "Bank",
-                           "Lloyds": "Bank",
-                           "Morgan Stanley": "Bank",
-                           "Natixis": "Bank",
-                           "Trafigura": "Bank",
-                           "J.P. Morgan": "Bank",
-                           "UniCredit": "Bank",
-                           "Marex": "Bank",
-                           "Mercuria": "Trading House",
-                           "Vitol": "Trading House"}
+            entity_dict = {"Standard Chartered": "Bank", "ICBC": "Bank", "Bank of America": "Bank",
+                           "Citi": "Bank", "Macquarie": "Bank", "Goldman Sachs": "Bank",
+                           "Mitsui": "Bank", "BNP": "Bank", "Commerzbank": "Bank",
+                           "Lloyds": "Bank", "Morgan Stanley": "Bank", "Natixis": "Bank",
+                           "J.P. Morgan": "Bank", "UniCredit": "Bank", "Marex": "Bank",
+                           "Credit Suisse": "Bank", "RBC": "Bank",
+                           "Mercuria": "Trading House", "Vitol": "Trading House", "Trafigura": "Trading House"}
 
             # Convert to a DataFrame
             entity_map = pd.DataFrame(list(entity_dict.items()), columns=["Name", "Type"])
