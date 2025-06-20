@@ -409,10 +409,12 @@ def get_energy_th_subdisc(candidateId, api_tokens):
 
 
 def assign_type(company_name, entity_df):
+    if not isinstance(company_name, str):
+        return None  # or "Unknown"
     for _, row in entity_df.iterrows():
         if row['Name'].lower() in company_name.lower():
             return row['Type']
-    return None  # Or "Unknown"
+    return None  # or "Unknown"
 
 
 # Streamlit UI
