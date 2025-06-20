@@ -235,7 +235,8 @@ fallback_map = {
     'an': 'An',
     'analyst': 'An',
     'director': 'D',
-    'd': 'D'
+    'd': 'D',
+    'ad': 'D'
 }
 
 # Normalize and map fallback + bracket values to final form
