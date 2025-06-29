@@ -392,7 +392,7 @@ def get_energy_th_product(candidateId, api_tokens):
     
     return None
 
-def get_energy_th_subdisc(candidateId, api_tokens):
+def get_subdisc(candidateId, api_tokens, api_id):
 
     # Headers to authenticate API request for total counts
     api_token = next(token_iterator)
@@ -402,11 +402,17 @@ def get_energy_th_subdisc(candidateId, api_tokens):
     page_url = f"https://ezekia.com/api/people/{candidateId}/additional-info"
     page_response = requests.get(page_url, headers=headers)
 
-    for item in page_response.json()["data"]:
+    if api_id == 659219:
+        for item in page_response.json()["data"]:
         if item["field"]["id"] == 11807:
             return item["value"]
-    
-    return None
+
+    elif api_id == 647987:
+        for item in page_response.json()["data"]:
+        if item["field"]["id"] == 11817:
+            return item["value"]
+    else:
+        return None
 
 
 def assign_type(company_name, entity_df):
