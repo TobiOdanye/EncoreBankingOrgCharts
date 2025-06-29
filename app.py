@@ -467,7 +467,7 @@ if st.button("Fetch Candidates"):
             # Create a round-robin iterator from your token list
             token_iterator = itertools.cycle(api_tokens)
             candidates_output["Product"] = candidates_output["Candidate ID"].apply(lambda cid: get_product(cid, api_tokens))
-            candidates_output["Discipline"] = candidates_output["Candidate ID"].apply(lambda cid: get_disc(cid, api_tokens))
+            candidates_output["Discipline"] = candidates_output["Candidate ID"].apply(lambda cid: get_disc(cid, api_tokens, api_id))
             
             # Define as a dictionary
             entity_dict = {"Standard Chartered": "Bank", "ICBC": "Bank", "Bank of America": "Bank",
