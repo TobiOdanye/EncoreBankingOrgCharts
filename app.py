@@ -388,8 +388,8 @@ def get_product(candidateId, api_tokens):
 
     if api_id == 659219:
         for item in page_response.json()["data"]:
-        if item["field"]["id"] == 11806:
-            return item["value"]
+            if item["field"]["id"] == 11806:
+                return item["value"]
     
     else:
         return None
@@ -407,13 +407,13 @@ def get_disc(candidateId, api_tokens, api_id):
     # this needs to move into subdiscipline function
     if api_id == 659219:
         for item in page_response.json()["data"]:
-        if item["field"]["id"] == 11807:
-            return item["value"]
+            if item["field"]["id"] == 11807:
+                return item["value"]
 
     elif api_id == 647987:
         for item in page_response.json()["data"]:
-        if item["field"]["id"] == 11817:
-            return item["value"]
+            if item["field"]["id"] == 11817:
+                return item["value"]
     else:
         return None
 
