@@ -376,7 +376,7 @@ def get_candidate_companies(group):
         'Candidate Move Within 6 Months': within_half_year_flag
     })
 
-def get_energy_th_product(candidateId, api_tokens):
+def get_product(candidateId, api_tokens):
 
     # Headers to authenticate API request for total counts
     api_token = next(token_iterator)
@@ -386,13 +386,15 @@ def get_energy_th_product(candidateId, api_tokens):
     page_url = f"https://ezekia.com/api/people/{candidateId}/additional-info"
     page_response = requests.get(page_url, headers=headers)
 
-    for item in page_response.json()["data"]:
+    if api_id == 659219:
+        for item in page_response.json()["data"]:
         if item["field"]["id"] == 11806:
             return item["value"]
     
-    return None
+    else:
+        return None
 
-def get_subdisc(candidateId, api_tokens, api_id):
+def get_disc(candidateId, api_tokens, api_id):
 
     # Headers to authenticate API request for total counts
     api_token = next(token_iterator)
@@ -402,6 +404,7 @@ def get_subdisc(candidateId, api_tokens, api_id):
     page_url = f"https://ezekia.com/api/people/{candidateId}/additional-info"
     page_response = requests.get(page_url, headers=headers)
 
+    # this needs to move into subdiscipline function
     if api_id == 659219:
         for item in page_response.json()["data"]:
         if item["field"]["id"] == 11807:
@@ -463,9 +466,8 @@ if st.button("Fetch Candidates"):
             # Example: apply to your DataFrame
             # Create a round-robin iterator from your token list
             token_iterator = itertools.cycle(api_tokens)
-            if api_id == "659219":
-                candidates_output["Energy TH Product"] = candidates_output["Candidate ID"].apply(lambda cid: get_energy_th_product(cid, api_tokens))
-                candidates_output["Energy TH Sub-Discipline"] = candidates_output["Candidate ID"].apply(lambda cid: get_energy_th_subdisc(cid, api_tokens))
+            candidates_output["Product"] = candidates_output["Candidate ID"].apply(lambda cid: get_product(cid, api_tokens))
+            candidates_output["Discipline"] = candidates_output["Candidate ID"].apply(lambda cid: get_disc(cid, api_tokens))
             
             # Define as a dictionary
             entity_dict = {"Standard Chartered": "Bank", "ICBC": "Bank", "Bank of America": "Bank",
