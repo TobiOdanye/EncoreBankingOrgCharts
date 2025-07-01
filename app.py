@@ -386,7 +386,7 @@ def get_product(candidateId, api_tokens):
     page_url = f"https://ezekia.com/api/people/{candidateId}/additional-info"
     page_response = requests.get(page_url, headers=headers)
 
-    if api_id == 659219:
+    if int(api_id) == 659219:
         for item in page_response.json()["data"]:
             if item["field"]["id"] == 11806:
                 return item["value"]
@@ -405,12 +405,12 @@ def get_disc(candidateId, token_iterator, api_id):
     page_response = requests.get(page_url, headers=headers)
 
     # this needs to move into subdiscipline function
-    if api_id == 659219:
+    if int(api_id) == 659219:
         for item in page_response.json()["data"]:
             if item["field"]["id"] == 11807:
                 return item["value"]
 
-    elif api_id == 647987:
+    elif int(api_id) == 647987:
         for item in page_response.json()["data"]:
             if item["field"]["id"] == 11817:
                 return item["value"]
