@@ -394,7 +394,7 @@ def get_product(candidateId, api_tokens):
     else:
         return None
 
-def get_disc(candidateId, api_tokens, api_id):
+def get_disc(candidateId, token_iterator, api_id):
 
     # Headers to authenticate API request for total counts
     api_token = next(token_iterator)
@@ -466,8 +466,8 @@ if st.button("Fetch Candidates"):
             # Example: apply to your DataFrame
             # Create a round-robin iterator from your token list
             token_iterator = itertools.cycle(api_tokens)
-            candidates_output["Product"] = candidates_output["Candidate ID"].apply(lambda cid: get_product(cid, api_tokens))
-            candidates_output["Discipline"] = candidates_output["Candidate ID"].apply(lambda cid: get_disc(cid, api_tokens, api_id))
+            candidates_output["Product"] = candidates_output["Candidate ID"].apply(lambda cid: get_product(cid, token_iterator))
+            candidates_output["Discipline"] = candidates_output["Candidate ID"].apply(lambda cid: get_disc(cid, token_iterator, api_id))
             
             # Define as a dictionary
             entity_dict = {"Standard Chartered": "Bank", "ICBC": "Bank", "Bank of America": "Bank",
