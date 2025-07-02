@@ -429,7 +429,7 @@ def normalize_entity_name(text):
     ]
 
     if not isinstance(text, str):
-        return text
+        return text  # keep non-string values unchanged
 
     text_lower = text.lower()
 
@@ -437,7 +437,7 @@ def normalize_entity_name(text):
         if name.lower() in text_lower:
             return name
 
-    return None
+    return text 
 
 
 # Streamlit UI
