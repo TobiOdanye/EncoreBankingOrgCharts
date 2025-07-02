@@ -408,7 +408,7 @@ def get_disc(candidateId, token_iterator, api_id):
     if int(api_id) == 656050:
         for item in page_response.json()["data"]:
             value = item["value"].lower()
-            if value = 11941:
+            if value == 11941:
                 if "sales" in value or "structuring" in value:
                     return "Sales/Structuring"
                 elif "trading" in value:
@@ -420,7 +420,7 @@ def get_disc(candidateId, token_iterator, api_id):
     elif int(api_id) == 647987:
         for item in page_response.json()["data"]:
             value = item["value"].lower()
-            if value = 11817:
+            if value == 11817:
                 if "sales" in value or "structuring" in value:
                     return "Sales/Structuring"
                 elif "trading" in value:
