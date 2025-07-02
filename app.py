@@ -360,8 +360,8 @@ def get_candidate_companies(group):
     # Ensure your date column is in datetime format
     if company1_start_date is not None:
         company1_start_date_time = pd.to_datetime(company1_start_date)
-        within_year_flag = 1 if pd.notnull(company1_start_date_time) and (now - company1_start_date_time).days <= 365 else 0
-        within_half_year_flag = 1 if pd.notnull(company1_start_date_time) and (now - company1_start_date_time).days <= 182 else 0
+        within_year_flag = "Yes" if pd.notnull(company1_start_date_time) and (now - company1_start_date_time).days <= 365 else "No"
+        within_half_year_flag = "Yes" if pd.notnull(company1_start_date_time) and (now - company1_start_date_time).days <= 182 else "No"
                                                           
     else:
         within_year_flag = None
@@ -473,9 +473,9 @@ for id, label in allowed_ids.items():
                 "Mitsui": "Bank", "BNP": "Bank", "Commerzbank": "Bank",
                 "Lloyds": "Bank", "Morgan Stanley": "Bank", "Natixis": "Bank",
                 "J.P. Morgan": "Bank", "UniCredit": "Bank", "Marex": "Bank",
-                "Credit Suisse": "Bank", "RBC": "Bank",
+                "Credit Suisse": "Bank", "RBC": "Bank", "ANZ": "Bank", "TD Securities": "Bank",
                 "Mercuria": "Trading House", "Vitol": "Trading House", "Trafigura": "Trading House",
-                "Hartree": "Trading House"
+                "Hartree": "Trading House", "Koch": "Trading House"
             }
 
             entity_map = pd.DataFrame(list(entity_dict.items()), columns=["Name", "Type"])
