@@ -489,8 +489,7 @@ for id, label in allowed_ids.items():
             candidates_output["Current Entity Type"] = candidates_output["Candidate Company"].apply(lambda x: assign_type(x, entity_map))
             candidates_output["Previous Entity Type"] = candidates_output["Candidate Company Previous"].apply(lambda x: assign_type(x, entity_map))
 
-            st.success(f"Data fetched successfully for project {api_id}!")
-            st.dataframe(candidates_output)
+            st.success(f"Data fetched successfully for {label} ({id})!")
 
             sheet_keys = {
                 "647987": "1kDZIOe5orm-OCaeCRxtSEmVU8kkoNdF_23zNj_0GHW0",
