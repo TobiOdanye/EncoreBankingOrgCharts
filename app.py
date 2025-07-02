@@ -420,6 +420,26 @@ def assign_type(company_name, entity_df):
     return None  # or "Unknown"
 
 
+def normalize_entity_name(text):
+    bank_names = [
+        "Bank of America", "Goldman Sachs", "Deutsche Bank", "Morgan Stanley", "Natixis",
+        "TD", "Standard Chartered", "Commerzbank", "Citi", "J.P. Morgan", "Commonwealth",
+        "BMO", "ICBC", "Macquarie", "ANZ", "HSBC", "Mitsui", "BNP", "UniCredit",
+        "Marex", "Lloyds"
+    ]
+
+    if not isinstance(text, str):
+        return text
+
+    text_lower = text.lower()
+
+    for name in bank_names:
+        if name.lower() in text_lower:
+            return name
+
+    return None
+
+
 # Streamlit UI
 st.title("Ezekia Org Chart Inputs")
 
@@ -447,6 +467,9 @@ for id, label in allowed_ids.items():
                 "Candidate ID", "Candidate Name", "Candidate Title", "Candidate Company", "Candidate Company Start Date", "Candidate Location", 
                 "Candidate Seniority", "Candidate Company Previous", "Candidate Company Previous End Date", "Candidate Move Within Year", "Candidate Move Within 6 Months"
             ]]
+
+            candidates["Candidate Company"] = df["Candidate Company"].apply(normalize_entity_name)
+            candidates["Candidate Company Previous"] = df["Candidate Company Previous"].apply(normalize_entity_name)
             
             candidates["Lucid Space"] = ""
             candidates["Lucid Space 2"] = ""
