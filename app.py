@@ -432,20 +432,24 @@ st.title("Ezekia Org Chart Inputs")
 
 # Input
 api_id = st.text_input("Enter Ezekia Project API ID")
-allowed_ids = ["647987", "656050", "217903", "659219", "666702"]
 
-if st.button("Fetch Candidates"):
-    if api_id in allowed_ids:
+allowed_ids = {
+    "647987": "HL - EMEA Metals Banking",
+    "656050": "HL - EMEA Energy Banking"
+}
+
+# Generate a button per allowed API ID
+for id, label in allowed_ids.items():
+    if st.button(f"Fetch Candidates – {label} ({id})"):
+        api_id = id  # Set api_id based on button clicked
+        
         try:
-            api_tokens = fetch_api_tokens()  # Get tokens here
             candidates = fetch_hotlist_candidates(api_id, api_tokens)
-            
             candidates_previous = candidates.groupby('Candidate ID').apply(get_candidate_companies).reset_index(drop=True)
             candidates.drop('End Date', axis=1, inplace=True)
-    
+
             candidates = candidates.merge(candidates_previous, on='Candidate ID', how='left')
             candidates = candidates[candidates['Candidate Experience'] == 1]
-            
             candidates['Candidate Seniority'] = candidates['Candidate Title'].apply(extract_seniority)
             candidates = candidates[[ 
                 "Candidate ID", "Candidate Name", "Candidate Title", "Candidate Company", "Candidate Company Start Date", "Candidate Location", 
@@ -454,84 +458,65 @@ if st.button("Fetch Candidates"):
             
             candidates["Lucid Space"] = ""
             candidates["Lucid Space 2"] = ""
-    
-            candidates.loc[candidates['Candidate Location'].str.contains('Paris', case=False, na=False), 'Candidate Location'] = 'Paris'
-            candidates.loc[candidates['Candidate Location'].str.contains('London', case=False, na=False), 'Candidate Location'] = 'London'
-            candidates.loc[candidates['Candidate Location'].str.contains('New York', case=False, na=False), 'Candidate Location'] = 'New York'
-            candidates.loc[candidates['Candidate Location'].str.contains('Singapore', case=False, na=False), 'Candidate Location'] = 'Singapore'
-            
+
+            location_map = {
+                'Paris': 'Paris',
+                'London': 'London',
+                'New York': 'New York',
+                'Singapore': 'Singapore'
+            }
+
+            for key in location_map:
+                candidates.loc[candidates['Candidate Location'].str.contains(key, case=False, na=False), 'Candidate Location'] = location_map[key]
+
             candidate_reports_into = fetch_candidates_additional_labels(candidates, api_tokens)
             candidates_output = pd.merge(candidates, candidate_reports_into, on='Candidate ID', how='inner')
 
-            # Example: apply to your DataFrame
-            # Create a round-robin iterator from your token list
             token_iterator = itertools.cycle(api_tokens)
             candidates_output["Product"] = candidates_output["Candidate ID"].apply(lambda cid: get_product(cid, token_iterator))
             candidates_output["Discipline"] = candidates_output["Candidate ID"].apply(lambda cid: get_disc(cid, token_iterator, api_id))
-            
-            # Define as a dictionary
-            entity_dict = {"Standard Chartered": "Bank", "ICBC": "Bank", "Bank of America": "Bank",
-                           "Citi": "Bank", "Macquarie": "Bank", "Goldman Sachs": "Bank",
-                           "Mitsui": "Bank", "BNP": "Bank", "Commerzbank": "Bank",
-                           "Lloyds": "Bank", "Morgan Stanley": "Bank", "Natixis": "Bank",
-                           "J.P. Morgan": "Bank", "UniCredit": "Bank", "Marex": "Bank",
-                           "Credit Suisse": "Bank", "RBC": "Bank",
-                           "Mercuria": "Trading House", "Vitol": "Trading House", "Trafigura": "Trading House"}
 
-            # Convert to a DataFrame
+            entity_dict = {
+                "Standard Chartered": "Bank", "ICBC": "Bank", "Bank of America": "Bank",
+                "Citi": "Bank", "Macquarie": "Bank", "Goldman Sachs": "Bank",
+                "Mitsui": "Bank", "BNP": "Bank", "Commerzbank": "Bank",
+                "Lloyds": "Bank", "Morgan Stanley": "Bank", "Natixis": "Bank",
+                "J.P. Morgan": "Bank", "UniCredit": "Bank", "Marex": "Bank",
+                "Credit Suisse": "Bank", "RBC": "Bank",
+                "Mercuria": "Trading House", "Vitol": "Trading House", "Trafigura": "Trading House"
+            }
+
             entity_map = pd.DataFrame(list(entity_dict.items()), columns=["Name", "Type"])
-
             candidates_output["Current Entity Type"] = candidates_output["Candidate Company"].apply(lambda x: assign_type(x, entity_map))
             candidates_output["Previous Entity Type"] = candidates_output["Candidate Company Previous"].apply(lambda x: assign_type(x, entity_map))
 
-            st.success("Data fetched successfully!")
+            st.success(f"Data fetched successfully for project {api_id}!")
             st.dataframe(candidates_output)
-    
-            # Define mapping of api_id to sheet_key
+
             sheet_keys = {
-            "647987": "1kDZIOe5orm-OCaeCRxtSEmVU8kkoNdF_23zNj_0GHW0",
-            "656050": "1oUI2kUMCokKRJiyAR1GoeH0pd1WpkOoC3ckMaruYjfU",
-            "217903": "1zK7H16AlYKsvfX-aMLWjUAqKF4wqQAtnfJSuQPRibRE",
-            "659219": "1zA8qmiJ5ue73PDWaEbxijb2Fttkl7z7MfehuDLhuQnY",
-            "666702": "1HxCJK19ASq18_HzncG4lbMb3_mefINZS6J3dLZjLFFg"}
-            
+                "647987": "1kDZIOe5orm-OCaeCRxtSEmVU8kkoNdF_23zNj_0GHW0",
+                "656050": "1oUI2kUMCokKRJiyAR1GoeH0pd1WpkOoC3ckMaruYjfU",
+                "217903": "1zK7H16AlYKsvfX-aMLWjUAqKF4wqQAtnfJSuQPRibRE",
+                "659219": "1zA8qmiJ5ue73PDWaEbxijb2Fttkl7z7MfehuDLhuQnY",
+                "666702": "1HxCJK19ASq18_HzncG4lbMb3_mefINZS6J3dLZjLFFg"
+            }
+
             sheet_key = sheet_keys.get(api_id)
-    
-            try:
-                scope = ["https://www.googleapis.com/auth/spreadsheets"]
-    
-                service_account_info = dict(st.secrets["gcp_service_account"])
-                creds = ServiceAccountCredentials.from_json_keyfile_dict(service_account_info, scope)
-                client = gspread.authorize(creds)
-                sheet = client.open_by_key(sheet_key)
-                worksheet = sheet.worksheet("LucidData")
-                st.success("Ezekia Data Sent to Google Sheets. Refresh in Lucid to View Updates.")
-                
-            except Exception as e:
-                st.error(f"An error occurred: {e}")
-    
-            # Clear the worksheet and write new data
-            worksheet.clear()
-            set_with_dataframe(worksheet, candidates_output)
-    
-            # Excel export
-            # excel_buffer = io.BytesIO()
-            # with pd.ExcelWriter(excel_buffer, engine='openpyxl') as writer:
-            #    candidates_output.to_excel(writer, index=False, sheet_name='Candidates')
-    
-            # st.download_button(
-            #   label="Download Excel",
-            #   data=excel_buffer.getvalue(),
-            #   file_name="ezekia_candidates.xlsx",
-            #   mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-            #)
-    
+            
+            if sheet_key:
+                try:
+                    scope = ["https://www.googleapis.com/auth/spreadsheets"]
+                    service_account_info = dict(st.secrets["gcp_service_account"])
+                    creds = ServiceAccountCredentials.from_json_keyfile_dict(service_account_info, scope)
+                    client = gspread.authorize(creds)
+                    sheet = client.open_by_key(sheet_key)
+                    worksheet = sheet.worksheet("LucidData")
+                    worksheet.clear()
+                    set_with_dataframe(worksheet, candidates_output)
+                    st.success("Ezekia data sent to Google Sheets. Refresh in Lucid to view updates.")
+                except Exception as e:
+                    st.error(f"Google Sheets error: {e}")
+
         except Exception as e:
-            st.error(f"Error occurred: {e}")
-    
-    elif api_id not in allowed_ids:
-        st.error("Project ID is not an Approved Hotlist")
-    
-    else:
-        st.error("Program Error")
+            st.error(f"An error occurred: {e}")
         
