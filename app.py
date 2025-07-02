@@ -430,8 +430,7 @@ def assign_type(company_name, entity_df):
 # Streamlit UI
 st.title("Ezekia Org Chart Inputs")
 
-# Input
-api_id = st.text_input("Enter Ezekia Project API ID")
+api_tokens = fetch_api_tokens()  # Fetch once
 
 allowed_ids = {
     "647987": "HL - EMEA Metals Banking",
@@ -440,7 +439,7 @@ allowed_ids = {
 
 # Generate a button per allowed API ID
 for id, label in allowed_ids.items():
-    if st.button(f"Fetch Candidates – {label} ({id})"):
+    if st.button(f"Fetch Profiles – {label} ({id})"):
         api_id = id  # Set api_id based on button clicked
         
         try:
