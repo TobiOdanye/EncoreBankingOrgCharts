@@ -468,8 +468,8 @@ for id, label in allowed_ids.items():
                 "Candidate Seniority", "Candidate Company Previous", "Candidate Company Previous End Date", "Candidate Move Within Year", "Candidate Move Within 6 Months"
             ]]
 
-            candidates["Candidate Company"] = df["Candidate Company"].apply(normalize_entity_name)
-            candidates["Candidate Company Previous"] = df["Candidate Company Previous"].apply(normalize_entity_name)
+            candidates["Candidate Company"] = candidates["Candidate Company"].apply(normalize_entity_name)
+            candidates["Candidate Company Previous"] = candidates["Candidate Company Previous"].apply(normalize_entity_name)
             
             candidates["Lucid Space"] = ""
             candidates["Lucid Space 2"] = ""
