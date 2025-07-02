@@ -405,25 +405,28 @@ def get_disc(candidateId, token_iterator, api_id):
     page_response = requests.get(page_url, headers=headers)
 
     # this needs to move into subdiscipline function
-    if int(api_id) == 659219:
+    if int(api_id) == 656050:
         for item in page_response.json()["data"]:
             value = item["value"].lower()
-            if "sales" in value or "structuring" in value:
-                return "Sales/Structuring"
-            elif "trading" in value:
-                return "Trading"
+            if value = 11941:
+                if "sales" in value or "structuring" in value:
+                    return "Sales/Structuring"
+                elif "trading" in value:
+                    return "Trading"
             else:
-                return value
+                return None
+
 
     elif int(api_id) == 647987:
         for item in page_response.json()["data"]:
             value = item["value"].lower()
-            if "sales" in value or "structuring" in value:
-                return "Sales/Structuring"
-            elif "trading" in value:
-                return "Trading"
+            if value = 11817:
+                if "sales" in value or "structuring" in value:
+                    return "Sales/Structuring"
+                elif "trading" in value:
+                    return "Trading"
             else:
-                return value
+                return None
     else:
         return None
 
