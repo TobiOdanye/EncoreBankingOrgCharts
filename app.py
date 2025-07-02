@@ -376,60 +376,40 @@ def get_candidate_companies(group):
         'Candidate Move Within 6 Months': within_half_year_flag
     })
 
-def get_product(candidateId, api_tokens):
-
-    # Headers to authenticate API request for total counts
-    api_token = next(token_iterator)
-    headers = {"Authorization": f"Bearer {api_token}",
-               "Content-Type": "application/json"}
-
-    page_url = f"https://ezekia.com/api/people/{candidateId}/additional-info"
-    page_response = requests.get(page_url, headers=headers)
-
-    if int(api_id) == 659219:
-        for item in page_response.json()["data"]:
-            if item["field"]["id"] == 11806:
-                return item["value"]
-    
-    else:
-        return None
 
 def get_disc(candidateId, token_iterator, api_id):
-
     # Headers to authenticate API request for total counts
     api_token = next(token_iterator)
-    headers = {"Authorization": f"Bearer {api_token}",
-               "Content-Type": "application/json"}
-    
+    headers = {
+        "Authorization": f"Bearer {api_token}",
+        "Content-Type": "application/json"
+    }
+
     page_url = f"https://ezekia.com/api/people/{candidateId}/additional-info"
     page_response = requests.get(page_url, headers=headers)
 
-    # this needs to move into subdiscipline function
-    if int(api_id) == 656050:
-        for item in page_response.json()["data"]:
-            if item["field"]["id"] == 11941:
-                value = item["value"].lower()
-                if "sales" in value or "structuring" in value:
-                    return "Sales/Structuring"
-                elif "trading" in value:
-                    return "Trading"
-            else:
-                return None
+    field_ids = {
+        656050: 11941,
+        647987: 11817
+    }
 
+    api_id = int(api_id)
 
-    elif int(api_id) == 647987:
-        for item in page_response.json()["data"]:
-            if item["field"]["id"] == 11817:
-                value = item["value"].lower()
-                if "sales" in value or "structuring" in value:
-                    return "Sales/Structuring"
-                elif "trading" in value:
-                    return "Trading"
-            else:
-                return None
-    else:
+    if api_id not in field_ids:
         return None
 
+    target_field_id = field_ids[api_id]
+
+    # Direct access: no .get()
+    for item in page_response.json()["data"]:
+        if item["field"]["id"] == target_field_id:
+            value = item["value"].lower() if item["value"] else ""
+            if "sales" in value or "structuring" in value:
+                return "Sales/Structuring"
+            elif "trading" in value:
+                return "Trading"
+
+    return None  # After checking all items
 
 def assign_type(company_name, entity_df):
     if not isinstance(company_name, str):
@@ -485,7 +465,6 @@ for id, label in allowed_ids.items():
             candidates_output = pd.merge(candidates, candidate_reports_into, on='Candidate ID', how='inner')
 
             token_iterator = itertools.cycle(api_tokens)
-            candidates_output["Product"] = candidates_output["Candidate ID"].apply(lambda cid: get_product(cid, token_iterator))
             candidates_output["Discipline"] = candidates_output["Candidate ID"].apply(lambda cid: get_disc(cid, token_iterator, api_id))
 
             entity_dict = {
