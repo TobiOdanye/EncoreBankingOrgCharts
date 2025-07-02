@@ -474,12 +474,32 @@ for id, label in allowed_ids.items():
                 "Lloyds": "Bank", "Morgan Stanley": "Bank", "Natixis": "Bank",
                 "J.P. Morgan": "Bank", "UniCredit": "Bank", "Marex": "Bank",
                 "Credit Suisse": "Bank", "RBC": "Bank",
-                "Mercuria": "Trading House", "Vitol": "Trading House", "Trafigura": "Trading House"
+                "Mercuria": "Trading House", "Vitol": "Trading House", "Trafigura": "Trading House",
+                "Hartree": "Trading House"
             }
 
             entity_map = pd.DataFrame(list(entity_dict.items()), columns=["Name", "Type"])
+            
             candidates_output["Current Entity Type"] = candidates_output["Candidate Company"].apply(lambda x: assign_type(x, entity_map))
             candidates_output["Previous Entity Type"] = candidates_output["Candidate Company Previous"].apply(lambda x: assign_type(x, entity_map))
+
+            def determine_platform_type_move(row):
+                current = row["Current Entity Type"]
+                previous = row["Previous Entity Type"]
+
+                if current == "Bank" and previous == "Bank":
+                    return "Bank to Bank"
+                elif current == "Bank" and previous == "Trading House":
+                    return "Trading House to Bank"
+                elif previous == "Bank" and current == "Trading House":
+                    return "Bank to Trading House"
+                elif current == "Hedge Fund" and previous == "Bank":
+                    return "Bank to Hedge Fund"
+                else:
+                    return "Other"
+
+            # Apply the function row-wise
+            candidates_output["Platform Type Move"] = candidates_output.apply(determine_platform_type_move, axis=1)
 
             st.success(f"Data fetched successfully for {label} ({id})!")
 
