@@ -423,7 +423,7 @@ def assign_type(company_name, entity_df):
 def normalize_entity_name(text):
     bank_names = [
         "Bank of America", "Goldman Sachs", "Deutsche Bank", "Morgan Stanley", "Natixis",
-        "TD", "Standard Chartered", "Commerzbank", "Citi", "J.P. Morgan", "Commonwealth",
+        "TD Securities", "Standard Chartered", "Commerzbank", "Citi", "J.P. Morgan", "Commonwealth",
         "BMO", "ICBC", "Macquarie", "ANZ", "HSBC", "Mitsui", "BNP", "UniCredit",
         "Marex", "Lloyds"
     ]
