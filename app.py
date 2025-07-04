@@ -168,11 +168,6 @@ def fetch_hotlist_candidates(api_id, api_tokens):
                     location = None
                     #location = candidate_address
 
-                if 'industry' in position and position['industry'] is not None and 'name' in position['industry']:
-                    industry = position['industry']['name']
-                else:
-                    industry = None
-
                 if 'startDate' in position and position['startDate'] is not None:
                     startdate = position['startDate']
                 else:
@@ -182,11 +177,6 @@ def fetch_hotlist_candidates(api_id, api_tokens):
                     enddate = position['endDate']
                 else:
                     enddate = None
-
-                if 'summary' in position and position['summary'] is not None:
-                    summary = position['summary']
-                else:
-                    summary = None
 
                 # Dynamically creating field names
                 candidate_role_number = index
