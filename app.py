@@ -9,6 +9,7 @@ import json
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 from gspread_dataframe import set_with_dataframe
+from concurrent.futures import ThreadPoolExecutor
 
 # Set options to display all rows and columns
 pd.set_option('display.max_rows', None)
@@ -81,6 +82,7 @@ def fetch_api_tokens():
         "fRM5_84z9y4BaLzbRDyFQ"]
     return api_tokens
 
+
 def fetch_hotlist_candidates(api_id, api_tokens):
     candidate_list = []
 
@@ -90,7 +92,7 @@ def fetch_hotlist_candidates(api_id, api_tokens):
     # Headers to authenticate API request for total counts
     headers = {
         "Authorization": f"Bearer {api_tokens[0]}",
-        "Content-Type": "application/json"  # Adjust content type if necessary
+        "Content-Type": "application/json"
     }
 
     # API request (GET request) for total counts
@@ -99,89 +101,62 @@ def fetch_hotlist_candidates(api_id, api_tokens):
     # Extract "last_page" value
     last_page_candidates = page_response.json()['meta']['lastPage']
 
-    # Loop through candidates in hotlist
-    for page in range(1, last_page_candidates + 1):
-
+    # Define page-fetching function for threading
+    def fetch_page_data(page):
         api_token = api_tokens[(page - 1) // 3 % len(api_tokens)]
-
-        # Headers to authenticate API request for total counts
         headers = {
             "Authorization": f"Bearer {api_token}",
-            "Content-Type": "application/json"  # Adjust content type if necessary
+            "Content-Type": "application/json"
         }
-
         page_url = f"https://ezekia.com/api/projects/{api_id}/candidates?filterOn%5B%5D=fullName&page={page}&sortOrder=desc&sortBy=createdAt"
-        page_response = requests.get(page_url, headers=headers)
+        response = requests.get(page_url, headers=headers)
+        if response.status_code == 200:
+            return page, response.json()
+        else:
+            print(f"Failed to fetch data for page {page}. Status Code: {response.status_code}")
+            return page, None
 
-        for candidate_index in range(0, len(page_response.json()["data"])):
+    # Fetch all pages in parallel
+    with ThreadPoolExecutor(max_workers=1) as executor:
+        futures = [executor.submit(fetch_page_data, page) for page in range(1, last_page_candidates + 1)]
+        results = [future.result() for future in futures]
 
-            if page_response.status_code == 200:
-                # Process the data for this page (you can print or store it)
-                print(f"Ezekia API ID {api_id}")
-                print(f"Fetched candidate page {page} from Ezekia API")
-            else:
-                print(f"Failed to fetch data for page {page}. Status Code: {page_response.status_code}")
+    # Sort results to preserve original order
+    results.sort(key=lambda x: x[0])
 
-            # Candidate details
-            candidate_id = page_response.json()["data"][candidate_index]["id"]
-            candidate_name = page_response.json()["data"][candidate_index]["name"]
-            candidate_updated = page_response.json()["data"][candidate_index]["updatedAt"]
+    # Loop through returned page data
+    for page, page_data in results:
+        if not page_data:
+            continue
+        print(f"Ezekia API ID {api_id}")
+        print(f"Fetched candidate page {page} from Ezekia API")
 
-            if len(page_response.json()["data"][candidate_index]["addresses"]) > 0:
-                if page_response.json()["data"][candidate_index]["addresses"][0]["city"]:
-                    candidate_city = page_response.json()["data"][candidate_index]["addresses"][0]["city"]
-                else:
-                    candidate_city = ''
+        for candidate_index in range(0, len(page_data["data"])):
+            candidate = page_data["data"][candidate_index]
 
-                if page_response.json()["data"][candidate_index]["addresses"][0]["country"]:
-                    candidate_country = page_response.json()["data"][candidate_index]["addresses"][0]["country"]
-                else:
-                    candidate_country = ''
+            candidate_id = candidate["id"]
+            candidate_name = candidate["name"]
+            candidate_updated = candidate["updatedAt"]
 
+            if len(candidate["addresses"]) > 0:
+                address = candidate["addresses"][0]
+                candidate_city = address["city"] if address.get("city") else ''
+                candidate_country = address["country"] if address.get("country") else ''
             else:
                 candidate_city = ''
                 candidate_country = ''
 
-            #candidate_address = candidate_city + ', ' + candidate_country
+            candidate_position_data = candidate["profile"]
 
-            # Candidate position details
-            candidate_position_data = page_response.json()["data"][candidate_index]["profile"]
-
-            # Iterate through each position and dynamically name the fields
             for index, position in enumerate(candidate_position_data['positions'], start=1):
-
                 candidate_role_number = index
 
-                if 'title' in position and position['title'] is not None:
-                    title = position['title']
-                else:
-                    title = None
+                title = position['title'] if 'title' in position and position['title'] is not None else None
+                company = position['company']['name'] if 'company' in position and position['company'] and 'name' in position['company'] else None
+                location = position['location']['name'] if 'location' in position and position['location'] and 'name' in position['location'] else None
+                startdate = position['startDate'] if 'startDate' in position and position['startDate'] is not None else None
+                enddate = position['endDate'] if 'endDate' in position and position['endDate'] is not None else None
 
-                if 'company' in position and position['company'] is not None and 'name' in position['company']:
-                    company = position['company']['name']
-                else:
-                    company = None
-
-                if 'location' in position and position['location'] is not None and 'name' in position['location']:
-                    location = position['location']['name']
-                else:
-                    location = None
-                    #location = candidate_address
-
-                if 'startDate' in position and position['startDate'] is not None:
-                    startdate = position['startDate']
-                else:
-                    startdate = None
-
-                if 'endDate' in position and position['endDate'] is not None:
-                    enddate = position['endDate']
-                else:
-                    enddate = None
-
-                # Dynamically creating field names
-                candidate_role_number = index
-
-                # Create a dictionary with dynamically named fields and print it
                 position_info = {
                     "Candidate Experience": candidate_role_number,
                     "Candidate Title": title,
@@ -191,24 +166,22 @@ def fetch_hotlist_candidates(api_id, api_tokens):
                     "End Date": enddate
                 }
 
-                # New key-value pair to add at the start
-                candidate_dict = {'Candidate ID': candidate_id,
-                                  'Candidate Name': candidate_name,
-                                  'Candidate Updated At': candidate_updated}
+                candidate_dict = {
+                    'Candidate ID': candidate_id,
+                    'Candidate Name': candidate_name,
+                    'Candidate Updated At': candidate_updated
+                }
 
                 candidate_info = {**candidate_dict, **position_info}
-
-                # Append extracted values to the list
                 candidate_list.append(candidate_info)
 
-    # Create a DataFrame from the list of candidate data points
     candidate_df = pd.DataFrame(candidate_list).reset_index(drop=True)
     print(candidate_df.info())
 
-    #candidate_df['candidate_start_date'] =
     candidate_df['Candidate Location'] = candidate_df['Candidate Location'].replace('United Kingdom', 'London, UK')
 
     return candidate_df
+
 
 # Normalize and map fallback + bracket values to final form
 fallback_map = {
@@ -271,46 +244,41 @@ def fetch_candidates_additional_labels(hotlist_df_trans, api_tokens):
     candidate_id_list = list(hotlist_df_trans['Candidate ID'].unique())
     print(f"Total candidates: {len(candidate_id_list)}")
 
-    candidates_additional_list = []
-    index_counter = 0
-    for index, id in enumerate(candidate_id_list):
-
-        print(f"Project: {index} / {len(candidate_id_list)}")
-
-        candidate_url = f"https://ezekia.com/#/people/{id}"
-
-        # Ezekia URL for total meeting and page (api) count
-        base_url_agg = f"https://ezekia.com/api/relationships?id={id}&type=person&relatedType=person"
-
-        index_counter += 1
-        api_token = api_tokens[(index_counter - 1) // 3 % len(api_tokens)]
-
-        # Headers to authenticate API request for total counts
+    def fetch_candidate_info(index, candidate_id):
+        api_token = api_tokens[(index) // 3 % len(api_tokens)]
         headers = {
             "Authorization": f"Bearer {api_token}",
-            "Content-Type": "application/json"  # Adjust content type if necessary
+            "Content-Type": "application/json"
         }
 
-        # API request (GET request) for total counts
+        candidate_url = f"https://ezekia.com/#/people/{candidate_id}"
+        base_url_agg = f"https://ezekia.com/api/relationships?id={candidate_id}&type=person&relatedType=person"
+
         response = requests.get(base_url_agg, headers=headers)
 
-        # Initialize project_rec_label before the loop
         candidate_reports_into = None
-
-        # Iterate through the response data
         response_data = response.json()
         if "data" in response_data and "people" in response_data["data"]:
             for person in response_data["data"]["people"]:
                 if person["relationship"] == 27571:
                     candidate_reports_into = person["id"]
 
-        # Append extracted values to the list
-        candidates_additional_list.append({"Candidate ID": id, "Candidate URL": candidate_url, "Candidate Reports Into": candidate_reports_into})
+        return {
+            "Candidate ID": candidate_id,
+            "Candidate URL": candidate_url,
+            "Candidate Reports Into": candidate_reports_into
+        }
 
-    # Create a DataFrame from the list of dictionaries
-    df = pd.DataFrame(candidates_additional_list).reset_index(drop=True)
+    with ThreadPoolExecutor(max_workers=8) as executor:
+        futures = [
+            executor.submit(fetch_candidate_info, idx, cid)
+            for idx, cid in enumerate(candidate_id_list)
+        ]
+        results = [future.result() for future in futures]
 
+    df = pd.DataFrame(results).reset_index(drop=True)
     return df
+
 
 def get_candidate_companies(group):
     group = group.sort_values(by='Candidate Experience')
@@ -478,7 +446,19 @@ for id, label in allowed_ids.items():
             candidates_output = pd.merge(candidates, candidate_reports_into, on='Candidate ID', how='inner')
 
             token_iterator = itertools.cycle(api_tokens)
-            candidates_output["Discipline"] = candidates_output["Candidate ID"].apply(lambda cid: get_disc(cid, token_iterator, api_id))
+            
+            # Thread-safe wrapper to return candidate ID + result
+            def wrapped_get_disc(cid):
+                return cid, get_disc(cid, token_iterator, api_id)
+
+            # Run get_disc in parallel using ThreadPoolExecutor
+            with ThreadPoolExecutor(max_workers=8) as executor:
+                futures = [executor.submit(wrapped_get_disc, cid) for cid in candidates_output["Candidate ID"]]
+                results = [future.result() for future in futures]
+
+            # Convert results to a dict and map to DataFrame
+            discipline_map = dict(results)
+            candidates_output["Discipline"] = candidates_output["Candidate ID"].map(discipline_map)
 
             entity_dict = {
                 "Standard Chartered": "Bank", "ICBC": "Bank", "Bank of America": "Bank",
