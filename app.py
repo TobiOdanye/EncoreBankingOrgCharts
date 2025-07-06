@@ -117,7 +117,7 @@ def fetch_hotlist_candidates(api_id, api_tokens):
             return page, None
 
     # Fetch all pages in parallel
-    with ThreadPoolExecutor(max_workers=1) as executor:
+    with ThreadPoolExecutor(max_workers=12) as executor:
         futures = [executor.submit(fetch_page_data, page) for page in range(1, last_page_candidates + 1)]
         results = [future.result() for future in futures]
 
@@ -269,7 +269,7 @@ def fetch_candidates_additional_labels(hotlist_df_trans, api_tokens):
             "Candidate Reports Into": candidate_reports_into
         }
 
-    with ThreadPoolExecutor(max_workers=8) as executor:
+    with ThreadPoolExecutor(max_workers=12) as executor:
         futures = [
             executor.submit(fetch_candidate_info, idx, cid)
             for idx, cid in enumerate(candidate_id_list)
@@ -452,7 +452,7 @@ for id, label in allowed_ids.items():
                 return cid, get_disc(cid, token_iterator, api_id)
 
             # Run get_disc in parallel using ThreadPoolExecutor
-            with ThreadPoolExecutor(max_workers=8) as executor:
+            with ThreadPoolExecutor(max_workers=12) as executor:
                 futures = [executor.submit(wrapped_get_disc, cid) for cid in candidates_output["Candidate ID"]]
                 results = [future.result() for future in futures]
 
