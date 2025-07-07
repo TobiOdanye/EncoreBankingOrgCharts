@@ -79,7 +79,27 @@ def fetch_api_tokens():
         "tifdLXaeW_diGgr6SoUngNN2WE-tY0U9PKx_Xua8-kSitMZFnwKPOmKA2CqOgLy97sG_eA1LF8bY3krYqVS8B9vnfT1_KEotcQO5LYiTM6fR"
         "vWK9Ki9CLBVmot6Bv7XYOWoF7DQgFx7jEGmWGV3HR1P1SOgDZ9ZZaOxPm8RIDUPmVrc2CocWkWTbYa0wE5KwrnzZT5GDBxJp5QCQyjQ_7rhv"
         "jMeO8FQxOqJTvIE5iKmoBDUqUr4G58XNYVdBxi9xcnsQSCHU8VRUlGdFYP0r71sFMmzQCqOY7hu84odb1aS3_vko7yynm54wfGO8auG7pgqS"
-        "fRM5_84z9y4BaLzbRDyFQ"]
+        "fRM5_84z9y4BaLzbRDyFQ",
+        "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIzIiwianRpIjoiYjc0ODU0ZmM0NWIxOWMwMWYyZjg0MzUzZGE3ZWIzNTNkNjZ"
+        "iZmQ2Y2U0OWUzYTNlYzMyNDliM2QwZDUyNjA5NGU2OTg2MTJlZTVlMTJhNzciLCJpYXQiOjE3NTE4NzQ5MzkuNDYyMDg0LCJuYmYiOjE3NTE"
+        "4NzQ5MzkuNDYyMDg4LCJleHAiOjQ5MDc1NDg1MzkuNDUyMzcsInN1YiI6IjE5NzM2NjYiLCJzY29wZXMiOltdfQ.3U2zNE38RY6j3TJS39O4"
+        "V0CNXWFfo6KFqf1VvKNpFgrynzzoDxvRKuEiuaSKVKzc47FP_OiKvw6EerG91eGP4MM8myrRJaCLwd0iT59WdAWw53JHQ8th-_BwxVn9OFXT"
+        "UbIq4DGewtFeQ_VMQn2qHxWTaK92mkKpoAD6Pc1WW2Zg55O7ngk3p2zXexLHTwEWKAUiDLPOiHLg9BN2jhugPybZoRIOZ3HZZmcSojsViU4X"
+        "mEbbP2aJBBFKkiU8_BFhdMmMz5UA9cF-Bwen1fNy_RWFWPUoT1Kke9Wg64ECtVtzuYAWwJpIREWKaGjz3NVmuRymJkQIe8UH2wg_Oa84Q5lG"
+        "vtMEXbdthTz0dujro4p9Z4tJQDdAVyTC-kNmQ7JfQ4dKD_PsqZ7sYM7t1Oarl9IlojS28dU3wySgh5VCxNhJdcJXKcBy-HgHZ5L39ceeW92w"
+        "K-dlV7sJDXxRTPlFkjJUr11fgBKLl-c0Rdn7vpopRg8R_FpQl8Tr_Lh7SXKP9Da3lD33ZulVXF_63wKOiyJiyACFTgC0Ch-hIjDrvwCtcTP3"
+        "8ZgqpatT4GYDT2gj7BQP7CYX3EC4CyzO29CNjuwPsIEOyrKSLtMR15m1U-56SJ1IDXJoc6X4mRQZOOkEF-LSkRKHuwtTJbdpKjmSeF0t6GEZ"
+        "bdSPYPP9QMv3bjU",
+        "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIzIiwianRpIjoiMjBhNjgxYTJlOGQ4YTBjY2U4NDUxOGRmYTQ5Mjg2NGU3ZmQ"
+        "3NjExNzU0ZDViMjQ0ZDQ4MjI1NzVhOGY2NTY3MDMzZTg5NTg4ODUwM2FjNTYiLCJpYXQiOjE3NTE4NzUwNDcuODgyNDMyLCJuYmYiOjE3NTE"
+        "4NzUwNDcuODgyNDM0LCJleHAiOjE3ODM0MTEwNDcuODc4NDU4LCJzdWIiOiIxOTczNjY2Iiwic2NvcGVzIjpbXX0.LR0mawnfNxSmFYRt5Bz"
+        "gNwMOXLLF9I3gerLiRVNsgsB7OWjRGt3ZHcBKWy83Ku2zeSxf7p7i8Co7YR1d1DVkJSOuizY2t9nhQ7Qxv2y53e2ZhYzx653lMsw8WFRxKFx"
+        "TfuB3FxmI0a19vw86apVeg6Jr3AeOnyJQ0lHFOiS4AoEJmvqmBwKqkUjgdU_3dydxrW4hT3T0IIp_AqCmNBVIKQ0NviFCeMpBgBoMaJGIKfj"
+        "GvRsS6Kxm5YwEb7rV1jx_cv44SkWrQRzEtfSyZ1biBWxx-8q0Rkv0Y6dXfWCwSpAIqefSoRbu4NiAJksw2s15DR00RqOO7qqS5b9hvdO6RB2"
+        "-54IQga2M6gIY_F9OyLrS5vx-RX-J2rQCdOxTSIClJrqpTV8jRciMo0YDTrM1tg6nh62yAk_hnWNCsm6rzaEBf_z2JB-mJVCURedRKrc8vI6"
+        "a_RmJb95z2-FYTzWPjWIJBKUkCycw6WVcYby6hwHA3UveRqgj5NTsgQRvjhWPIXNkHceyRde_xrjRbQ3kvVazdgNbeFhDZ3E1EYcG__vIKEW"
+        "II-wfCXdx77Hi4-RrGWQs15BNzORDKG5Vne9BF7hYhQsKGwVvcqOPIqUukeGZViWE0ffx-I66YGsyUYHwrZVuqvGMeA5A-Qwf_nf51UzDig_"
+        "l71yb-39UzKEgKpc"]
     return api_tokens
 
 
@@ -117,7 +137,7 @@ def fetch_hotlist_candidates(api_id, api_tokens):
             return page, None
 
     # Fetch all pages in parallel
-    with ThreadPoolExecutor(max_workers=12) as executor:
+    with ThreadPoolExecutor(max_workers=16) as executor:
         futures = [executor.submit(fetch_page_data, page) for page in range(1, last_page_candidates + 1)]
         results = [future.result() for future in futures]
 
@@ -269,7 +289,7 @@ def fetch_candidates_additional_labels(hotlist_df_trans, api_tokens):
             "Candidate Reports Into": candidate_reports_into
         }
 
-    with ThreadPoolExecutor(max_workers=12) as executor:
+    with ThreadPoolExecutor(max_workers=16) as executor:
         futures = [
             executor.submit(fetch_candidate_info, idx, cid)
             for idx, cid in enumerate(candidate_id_list)
@@ -452,7 +472,7 @@ for id, label in allowed_ids.items():
                 return cid, get_disc(cid, token_iterator, api_id)
 
             # Run get_disc in parallel using ThreadPoolExecutor
-            with ThreadPoolExecutor(max_workers=12) as executor:
+            with ThreadPoolExecutor(max_workers=16) as executor:
                 futures = [executor.submit(wrapped_get_disc, cid) for cid in candidates_output["Candidate ID"]]
                 results = [future.result() for future in futures]
 
