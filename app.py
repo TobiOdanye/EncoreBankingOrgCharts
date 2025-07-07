@@ -123,7 +123,7 @@ def fetch_hotlist_candidates(api_id, api_tokens):
 
     # Define page-fetching function for threading
     def fetch_page_data(page):
-        api_token = api_tokens[(page - 1) // 3 % len(api_tokens)]
+        api_token = api_tokens[page % len(api_tokens)]
         headers = {
             "Authorization": f"Bearer {api_token}",
             "Content-Type": "application/json"
@@ -265,7 +265,7 @@ def fetch_candidates_additional_labels(hotlist_df_trans, api_tokens):
     print(f"Total candidates: {len(candidate_id_list)}")
 
     def fetch_candidate_info(index, candidate_id):
-        api_token = api_tokens[(index) // 3 % len(api_tokens)]
+        api_token = api_tokens[index % len(api_tokens)]
         headers = {
             "Authorization": f"Bearer {api_token}",
             "Content-Type": "application/json"
