@@ -261,13 +261,13 @@ def fetch_candidates_additional_labels(hotlist_df_trans, api_tokens):
         if "data" in response_data and "people" in response_data["data"]:
             for person in response_data["data"]["people"]:
                 if person["relationship"] == 27571:
-                    candidate_reports_into = person["id"]
+                    if person["id"] in candidate_id_list:
+                        candidate_reports_into = person["id"]
 
         return {
             "Candidate ID": candidate_id,
             "Candidate URL": candidate_url,
-            "Candidate Reports Into": candidate_reports_into
-        }
+            "Candidate Reports Into": candidate_reports_into}
 
     with ThreadPoolExecutor(max_workers=12) as executor:
         futures = [
