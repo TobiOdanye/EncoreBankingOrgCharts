@@ -190,6 +190,7 @@ fallback_map = {
     'vice president': 'VP',
     'vice-president': 'VP',
     'vp': 'VP',
+    'avp': 'AVP',
     'md': 'MD',
     'ed': 'ED',
     'assoc': 'As',
@@ -199,7 +200,7 @@ fallback_map = {
     'analyst': 'An',
     'director': 'D',
     'd': 'D',
-    'ad': 'D'
+    'ad': 'AD'
 }
 
 # Normalize and map fallback + bracket values to final form
@@ -210,7 +211,10 @@ ordered_fallback_map = {
     'vice president': 'VP',
     'vice-president': 'VP',
     'vp': 'VP',
+    'avp': 'AVP',
     'md': 'MD',
+    'ed': 'ED',
+    'ad': 'AD',
     'assoc': 'As',
     'assoc.': 'As',
     'analyst': 'An'}
