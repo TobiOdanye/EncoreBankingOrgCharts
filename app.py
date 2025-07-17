@@ -408,8 +408,8 @@ st.title("Ezekia Org Chart Inputs")
 api_tokens = fetch_api_tokens()  # Fetch once
 
 allowed_ids = {
-    "647987": "HL - EMEA Metals Banking",
-    "656050": "HL - EMEA Energy Banking"
+    "647987": "Org List - EMEA Metals Banking",
+    "656050": "Org List - EMEA Energy Banking"
 }
 
 # Generate a button per allowed API ID
